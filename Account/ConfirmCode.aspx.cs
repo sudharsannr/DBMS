@@ -48,6 +48,7 @@ public partial class Account_ConfirmCodeaspx : System.Web.UI.Page
             if (user!=null)
             {
                 IdentityHelper.SignIn(manager, user, isPersistent: false);
+                updateRegCode(Text, 0);
                 Response.Redirect("/Account/Profile.aspx");
             }
         }
