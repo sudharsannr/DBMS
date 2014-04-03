@@ -8,6 +8,7 @@ using System.Text;
 
 public partial class Account_RegisterExternalLogin : System.Web.UI.Page
 {
+    string errormessage;
     protected string ProviderName
     {
         get { return (string)ViewState["ProviderName"] ?? String.Empty; }
@@ -59,6 +60,7 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
                 else
                 {
                     AddErrors(result);
+                    //ErrorMessage.Text = result.Errors.ToString();
                     return;
                 }
             }
@@ -103,10 +105,10 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
         }
         var manager = new UserManager();
         var user = new ApplicationUser() { UserName = userName.Text };
-        IdentityResult result = manager.Create(user);
-        if (result.Succeeded)
+        if (!checkExistingUser())
         {
-            if (!checkExistingUser())
+            IdentityResult result = manager.Create(user);
+            if (result.Succeeded)
             {
                 StringBuilder ConnectionString = new StringBuilder();
                 ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
@@ -122,31 +124,48 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
                 OleDbParameter param = new OleDbParameter();
                 OleDbCommand insert_regUser = new OleDbCommand(cmd, conn, tran);
                 insert_regUser.Parameters.Add("?", OleDbType.VarChar).Value = userName.Text;
-                insert_regUser.ExecuteNonQuery();
+                if(insert_regUser.ExecuteNonQuery() > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("No problem");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Not updated");
+                }
+                
                 tran.Commit();
                 conn.Close();
-            }
-            var loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
 
-            if (loginInfo == null)
-            {
-                Response.Redirect("~/Account/Login");
-                return;
+                var loginInfo = Context.GetOwinContext().Authentication.GetExternalLoginInfo();
+
+                if (loginInfo == null)
+                {
+                    Response.Redirect("~/Account/Login");
+                    return;
+                }
+                result = manager.AddLogin(user.Id, loginInfo.Login);
+                if (result.Succeeded)
+                {
+                    IdentityHelper.SignIn(manager, user, isPersistent: false);
+                    //IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
+                    Response.Redirect("~/Account/Profile", true);
+                    return;
+                }
+                System.Diagnostics.Debug.WriteLine("Inside error message");
+                AddErrors(result);            
             }
-            result = manager.AddLogin(user.Id, loginInfo.Login);
-            if (result.Succeeded)
-            {
-                IdentityHelper.SignIn(manager, user, isPersistent: false);
-                //IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
-                Response.Redirect("~/Account/Profile",true);
-                return;
-            }
-            AddErrors(result);
-        }        
+        }
+        else
+        {
+            ErrorMessage.Text = "Username already taken. Please enter a different name.";
+            System.Diagnostics.Debug.WriteLine("Inside error message");
+            return;
+        }
     }
 
     private void AddErrors(IdentityResult result)
     {
+
         foreach (var error in result.Errors)
         {
             ModelState.AddModelError("", error);
