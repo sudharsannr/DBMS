@@ -13,4 +13,9 @@
     <div id="Food">
         <%=str1%>
     </div>
+
+    <div id="Button controls">
+        <input type="button" id="ReserveTable" value="Reserve Table"/>
+        <input type="button" id="OrderFood" value="Order Food" />
+    </div>
 </asp:Content>

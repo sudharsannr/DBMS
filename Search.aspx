@@ -25,8 +25,6 @@
                 </div>
             </div>
         </div>
-    <br />
-    <br />
     <div>
         <%--<asp:Repeater ID="RestaurantRepeater" runat="server">
             <HeaderTemplate>

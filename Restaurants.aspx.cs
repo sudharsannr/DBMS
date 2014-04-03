@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.OleDb;
+using System.Text;
+using GourmetGuide;
 
 public partial class Account_Restaurants : System.Web.UI.Page
 {
@@ -15,11 +17,15 @@ public partial class Account_Restaurants : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         rid = Request.QueryString["restaurant"];
-        System.Diagnostics.Debug.WriteLine("Helkko "+rid);
-        string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=Expecto$10;USER ID=sav";
+        StringBuilder ConnectionString = new StringBuilder();
+        ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                .Append("USER ID=").Append(ProjectSettings.dbUser);
         string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " +rid;
         string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID ="+rid+" AND ROWNUM <=50";
-        OleDbConnection conn = new OleDbConnection(ConnectionString);
+        OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         OleDbTransaction tran = null;
         conn.Open();
         System.Diagnostics.Debug.WriteLine("Helksako " + cmd1);
@@ -44,4 +50,5 @@ public partial class Account_Restaurants : System.Web.UI.Page
         str1 += @"</table>";
         conn.Close();
     }
+    
 }

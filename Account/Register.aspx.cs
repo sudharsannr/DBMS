@@ -20,7 +20,6 @@ public partial class Account_Register : Page
         
         if (IsPostBack)
         {
-            //TempTextBox.Text = (string)(Session["ConfirmationCode"]);
             if (!(String.IsNullOrEmpty(Password.Text.Trim())))
             {
                 Password.Attributes["value"] = Password.Text;
@@ -28,40 +27,10 @@ public partial class Account_Register : Page
             }
         }
     }
+
     protected void GetRegCode(object sender, EventArgs e)
     {
-        var fromAddress = new MailAddress("gourmetguideteam@gmail.com", "Gourmet Guide Team");
-        var toAddress = new MailAddress(EMailID.Text, UserName.Text);
-        string fromPassword = ProjectSettings.gmailKey;
-        const string subject = "Greetings from Gourmet Guide";
-        Random rnd = new Random();
-        month = rnd.Next(100000, 999999);
-        if(!checkRegUser(UserName.Text,EMailID.Text))
-            insert_into_regUser(month);
-        else
-        {
-            ErrorMessage.Text="User Name/EMail Already Exists";
-            return;
-        }
-        var body = "Hi. Thank you for registering with us.\n\n Please enter the code in the Registration Page to confirm account activation \n\n" + month;
-        var smtp = new SmtpClient
-        {
-            Host = "smtp.gmail.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new System.Net.NetworkCredential(fromAddress.Address, fromPassword)
-
-        };
-        using (var message = new MailMessage(fromAddress, toAddress)
-        {
-            Subject = subject,
-            Body = body
-        })
-        {
-            smtp.Send(message);
-        }
+        
         string Text=UserName.Text;
         var manager = new UserManager();
         var user = new ApplicationUser() { UserName = Text };
@@ -69,6 +38,38 @@ public partial class Account_Register : Page
         if (result.Succeeded)
         {
             //IdentityHelper.SignIn(manager, user, isPersistent: false);
+            var fromAddress = new MailAddress("gourmetguideteam@gmail.com", "Gourmet Guide Team");
+            var toAddress = new MailAddress(EMailID.Text, UserName.Text);
+            string fromPassword = ProjectSettings.gmailKey;
+            const string subject = "Greetings from Gourmet Guide";
+            Random rnd = new Random();
+            month = rnd.Next(100000, 999999);
+            if (!checkRegUser(UserName.Text, EMailID.Text))
+                insert_into_regUser(month);
+            else
+            {
+                ErrorMessage.Text = "User Name/EMail Already Exists";
+                return;
+            }
+            var body = "Hi. Thank you for registering with us.\n\n Please enter the code in the Registration Page to confirm account activation \n\n" + month;
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential(fromAddress.Address, fromPassword)
+
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                smtp.Send(message);
+            }
             Response.Redirect("/Account/ConfirmCode.aspx?user=" + UserName.Text);
         }
         else
@@ -88,20 +89,29 @@ public partial class Account_Register : Page
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         System.Diagnostics.Debug.WriteLine(ConnectionString.ToString());
         string cmd = "select * from srajagop.registereduser where username='"+UserName+"'";
-        OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+        OleDbDataReader oReader = null;
+        OleDbConnection conn = null;
+        try
+        {
+        conn = new OleDbConnection(ConnectionString.ToString());
         OleDbCommand select_regUser = new OleDbCommand(cmd, conn);
         conn.Open();
-        OleDbDataReader oReader = select_regUser.ExecuteReader();
+        oReader = select_regUser.ExecuteReader();
         bool hasUserName = oReader.HasRows;
-        conn.Close();
+        //conn.Close();
         cmd = "select * from srajagop.registereduser where EMailID='" + eMail + "'";
         OleDbCommand select_EMail = new OleDbCommand(cmd, conn);
-        conn.Open();
+        //conn.Open();
         oReader = select_EMail.ExecuteReader();
         bool hasEMail = oReader.HasRows;
-        conn.Close();
         bool retVal = hasUserName || hasEMail;
         return retVal;
+        }
+        finally
+        {
+        oReader.Close();
+        conn.Close();
+        }
     }
 
     private void insert_into_regUser(int month)
@@ -113,12 +123,15 @@ public partial class Account_Register : Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         string cmd = "insert into srajagop.registereduser values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         OleDbTransaction tran = null;
+        OleDbConnection conn = null;
+        try
+        {
+        conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         tran = conn.BeginTransaction();
         OleDbParameter param = new OleDbParameter();
-        OleDbCommand insert_regUser = new OleDbCommand(cmd, conn, tran);
+        OleDbCommand insert_regUser = new OleDbCommand(cmd, conn, tran);            
         insert_regUser.Parameters.Add("?", OleDbType.VarChar).Value = UserName.Text;
         insert_regUser.Parameters.Add("?", OleDbType.VarChar).Value = EMailID.Text;
         insert_regUser.Parameters.Add("?", OleDbType.VarChar).Value = Password.Text;
@@ -154,6 +167,10 @@ public partial class Account_Register : Page
         insert_regUser.Parameters.Add("?", OleDbType.Integer).Value = month.ToString();
         insert_regUser.ExecuteNonQuery();
         tran.Commit();
+        }
+        finally
+        {
         conn.Close();
+        }
     }
 }
