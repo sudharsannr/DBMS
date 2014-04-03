@@ -5,18 +5,28 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using GourmetGuide;
+using System.Text;
 public partial class Account_Default : System.Web.UI.Page
 {
     string name, description, opentime, closetime, city, state, address1, address2, zip;
     int nwdays;
     int[] acount = new int[4];
     bool val1;
+    OleDbDataReader oReader;
+    OleDbDataReader oReader1;
+    OleDbDataReader oReader2;
+    OleDbDataReader oReader3;
+    OleDbDataReader oReader4;
+    StringBuilder ConnectionString = new StringBuilder();
+    OleDbConnection conn;
     protected void Page_Load(object sender, EventArgs e)
     {
         val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
         if(val1)
         {
+            EMailID.Enabled = false;
+            rfvEmail.Enabled = false;
             EMailID.Visible = false;
             EMailLabel.Visible = false;
         }
@@ -25,74 +35,9 @@ public partial class Account_Default : System.Web.UI.Page
             EMailID.Visible = true;
             EMailLabel.Visible = true;
         }
-
-        string restaurant_id = Request.QueryString["restaurant"];
-        string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=Rsm3171990;USER ID=sr8";
-        string cmd = "select name,description,opentime,closetime,city,state,address1,address2,zip,nonworkingdays from srajagop.restaurant where restaurantid = " + restaurant_id;
-        string cmd1 = "select availabilitycount from srajagop.tables where groupid = 2 and restaurantid = " + restaurant_id;
-        string cmd2 = "select availabilitycount from srajagop.tables where groupid = 4 and restaurantid = " + restaurant_id;
-        string cmd3 = "select availabilitycount from srajagop.tables where groupid = 6 and restaurantid = " + restaurant_id;
-        string cmd4 = "select availabilitycount from srajagop.tables where groupid = 8 and restaurantid = " + restaurant_id;
-        System.Diagnostics.Debug.WriteLine(cmd);
-        System.Diagnostics.Debug.WriteLine(ConnectionString);
-        OleDbConnection conn = new OleDbConnection(ConnectionString);
-        OleDbTransaction tran = null;
-        conn.Open();
-        OleDbParameter param = new OleDbParameter();
-        OleDbCommand select_restaurants = new OleDbCommand(cmd, conn);
-        OleDbCommand select_tables_2 = new OleDbCommand(cmd1, conn);
-        OleDbCommand select_tables_4 = new OleDbCommand(cmd2, conn);
-        OleDbCommand select_tables_6 = new OleDbCommand(cmd3, conn);
-        OleDbCommand select_tables_8 = new OleDbCommand(cmd4, conn);
-        OleDbDataReader oReader = select_restaurants.ExecuteReader();
-        OleDbDataReader oReader1 = select_tables_2.ExecuteReader();
-        OleDbDataReader oReader2 = select_tables_4.ExecuteReader();
-        OleDbDataReader oReader3 = select_tables_6.ExecuteReader();
-        OleDbDataReader oReader4 = select_tables_8.ExecuteReader();
-        
-        
-        oReader.Read();
-        oReader1.Read();
-        oReader2.Read();
-        oReader3.Read();
-        oReader4.Read();
-
-        name = oReader[0].ToString();
-        description = oReader[1].ToString();
-        opentime = oReader[2].ToString();
-        closetime = oReader[3].ToString();
-        city = oReader[4].ToString();
-        state = oReader[5].ToString();
-        address1 = oReader[6].ToString();
-        address2 = oReader[7].ToString();
-        zip = oReader[8].ToString();
-        nwdays = System.Convert.ToInt32(oReader[9].ToString());
-
-        acount[0] = System.Convert.ToInt32(oReader1[0].ToString());
-        System.Diagnostics.Debug.WriteLine(acount[0]);
-        acount[1] = System.Convert.ToInt32(oReader2[0].ToString());
-        acount[2] = System.Convert.ToInt32(oReader3[0].ToString());
-        acount[3] = System.Convert.ToInt32(oReader4[0].ToString());
-
-        r_name.Text = name;
-        r_address.Text = address1 + "\n" + address2 + "\n" + city + ", " + state + " - " + zip;
-        bool[] en = { CheckBox1.Checked, CheckBox2.Checked, CheckBox3.Checked, CheckBox4.Checked };
-        DropDownList1.Enabled = en[0];
-        DropDownList2.Enabled = en[1];
-        DropDownList3.Enabled = en[2];
-        DropDownList4.Enabled = en[3];
-        
-            
-        conn.Close();
-    }
+        populateItems();
+     }
     
-    private void select_restaurant(int restaurant_id)
-    {
-          
-        
-           
-    }
-
     protected void datepicker_TextChanged(object sender, EventArgs e)
     {
         string[] date = datepicker.Text.Split('/');
@@ -125,8 +70,9 @@ public partial class Account_Default : System.Web.UI.Page
 
     protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
     {
-            if(CheckBox1.Checked) {
+        if(CheckBox1.Checked) {
             DropDownList1.Enabled = true;
+            
             DropDownList1.Items.Clear();
             DropDownList1.Items.Add(new ListItem("-select-", "0", true));
             for (int i = 1; i <= acount[0]; i++)
@@ -134,7 +80,8 @@ public partial class Account_Default : System.Web.UI.Page
                 DropDownList1.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
             } 
             }
-        else {
+        else
+        {
             DropDownList1.Items.Clear();
             //DropDownList1.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList1.Enabled = false;
@@ -155,7 +102,8 @@ public partial class Account_Default : System.Web.UI.Page
             DropDownList2.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
         }
         }
-        else {
+        else
+        {
             DropDownList2.Items.Clear();
             //DropDownList2.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList2.Enabled = false;
@@ -173,7 +121,8 @@ public partial class Account_Default : System.Web.UI.Page
             DropDownList3.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
         }
         }
-        else {
+        else
+        {
             DropDownList3.Items.Clear();
             //DropDownList3.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList3.Enabled = false;
@@ -183,18 +132,150 @@ public partial class Account_Default : System.Web.UI.Page
     {
         if (CheckBox4.Checked)
         {
-        DropDownList4.Enabled = true;
-        DropDownList4.Items.Clear();
-        DropDownList4.Items.Add(new ListItem("-select-", "0", true));
-        for (int i = 1; i <= acount[3]; i++)
+            DropDownList4.Enabled = true;
+            DropDownList4.Items.Clear();
+            DropDownList4.Items.Add(new ListItem("-select-", "0", true));
+            for (int i = 1; i <= acount[3]; i++)
+            {
+                DropDownList4.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
+            }
+        }
+        else
         {
-            DropDownList4.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
-        }
-        }
-        else {
             DropDownList4.Items.Clear();
             //DropDownList4.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList4.Enabled = false;
         }
+    }
+
+    private void populateItems()
+    {
+        if (Request.QueryString["restaurant"] != null)
+        {
+            string restaurant_id = Request.QueryString["restaurant"];
+            string cmd = "select name,description,opentime,closetime,city,state,address1,address2,zip,nonworkingdays from srajagop.restaurant where restaurantid = " + restaurant_id;
+            string cmd1 = "select availabilitycount from srajagop.tables where groupid = 2 and restaurantid = " + restaurant_id;
+            string cmd2 = "select availabilitycount from srajagop.tables where groupid = 4 and restaurantid = " + restaurant_id;
+            string cmd3 = "select availabilitycount from srajagop.tables where groupid = 6 and restaurantid = " + restaurant_id;
+            string cmd4 = "select availabilitycount from srajagop.tables where groupid = 8 and restaurantid = " + restaurant_id;
+            
+            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                    .Append("USER ID=").Append(ProjectSettings.dbUser);
+            System.Diagnostics.Debug.WriteLine(ConnectionString.ToString());
+            conn = new OleDbConnection(ConnectionString.ToString());
+            conn.Open();
+            OleDbCommand select_restaurants = new OleDbCommand(cmd, conn);
+            OleDbCommand select_tables_2 = new OleDbCommand(cmd1, conn);
+            OleDbCommand select_tables_4 = new OleDbCommand(cmd2, conn);
+            OleDbCommand select_tables_6 = new OleDbCommand(cmd3, conn);
+            OleDbCommand select_tables_8 = new OleDbCommand(cmd4, conn);
+            oReader = select_restaurants.ExecuteReader();
+            oReader1 = select_tables_2.ExecuteReader();
+            oReader2 = select_tables_4.ExecuteReader();
+            oReader3 = select_tables_6.ExecuteReader();
+            oReader4 = select_tables_8.ExecuteReader();
+
+
+            oReader.Read();
+            oReader1.Read();
+            oReader2.Read();
+            oReader3.Read();
+            oReader4.Read();
+
+            name = oReader[0].ToString();
+            description = oReader[1].ToString();
+            opentime = oReader[2].ToString();
+            closetime = oReader[3].ToString();
+            city = oReader[4].ToString();
+            state = oReader[5].ToString();
+            address1 = oReader[6].ToString();
+            address2 = oReader[7].ToString();
+            zip = oReader[8].ToString();
+            nwdays = System.Convert.ToInt32(oReader[9].ToString());
+
+            acount[0] = System.Convert.ToInt32(oReader1[0].ToString());
+            System.Diagnostics.Debug.WriteLine(acount[0]);
+            acount[1] = System.Convert.ToInt32(oReader2[0].ToString());
+            acount[2] = System.Convert.ToInt32(oReader3[0].ToString());
+            acount[3] = System.Convert.ToInt32(oReader4[0].ToString());
+
+            r_name.Text = name;
+            r_address.Text = address1 + "\n" + address2 + "\n" + city + ", " + state + " - " + zip;
+            bool[] en = { CheckBox1.Checked, CheckBox2.Checked, CheckBox3.Checked, CheckBox4.Checked };
+            DropDownList1.Enabled = en[0];
+            DropDownList2.Enabled = en[1];
+            DropDownList3.Enabled = en[2];
+            DropDownList4.Enabled = en[3];
+            conn.Close();
+        }
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        string eMail;
+        if(val1)
+        {
+            string cmd= "select EMAILID from srajagop.RegisteredUser where userName='" + System.Web.HttpContext.Current.User.Identity.Name+"'";
+            System.Diagnostics.Debug.WriteLine("UserName is " + System.Web.HttpContext.Current.User.Identity.Name);
+            OleDbCommand select_EMail = new OleDbCommand(cmd, conn);
+            conn.Open();
+            oReader = select_EMail.ExecuteReader();
+            oReader.Read();
+            eMail = oReader[0].ToString();
+            System.Diagnostics.Debug.WriteLine("EMail is " + eMail);
+            oReader.Close();
+            conn.Close();
+        }
+        else
+        {
+            eMail = EMailID.Text;
+        }
+        bool[] en = { CheckBox1.Checked, CheckBox2.Checked, CheckBox3.Checked, CheckBox4.Checked };
+        int restaurantID=Int32.Parse(Request.QueryString["restaurant"]);
+        int groupID=1;
+        List<DropDownList> ls = new List<DropDownList>();
+        ls.Add(DropDownList1);
+        ls.Add(DropDownList2);
+        ls.Add(DropDownList3);
+        ls.Add(DropDownList4);
+        //int[] AvailabilityCount={Int32.Parse(DropDownList1.SelectedValue),Int32.Parse(DropDownList2.SelectedValue),Int32.Parse(DropDownList3.SelectedValue),Int32.Parse(DropDownList4.SelectedValue)};
+        int avlCnt=0;
+        for(int i=0;i<4;i++)
+        {
+            if (en[i] == true)
+            {
+                groupID = (i + 1) * 2;
+                System.Diagnostics.Debug.WriteLine("Value of Dropdown "+ls[i].Text);
+                avlCnt = Int32.Parse(ls[i].Text);
+            }
+            if (avlCnt != 0)
+            {
+                string insertcmd = "insert into srajagop.tablereserve values(?,?,?,?,?)";
+                OleDbTransaction tran = null;
+                conn.Open();
+                tran = conn.BeginTransaction();
+                OleDbCommand insert_Tblreserve = new OleDbCommand(insertcmd, conn,tran);
+                insert_Tblreserve.Parameters.Add("?", OleDbType.Integer).Value = restaurantID;
+                insert_Tblreserve.Parameters.Add("?", OleDbType.Integer).Value = groupID;
+                insert_Tblreserve.Parameters.Add("?", OleDbType.VarChar).Value = eMail;
+                insert_Tblreserve.Parameters.Add("?", OleDbType.Integer).Value = avlCnt;
+                insert_Tblreserve.Parameters.Add("?", OleDbType.VarChar).Value = DropDownList5.SelectedValue;
+                insert_Tblreserve.ExecuteNonQuery();
+                tran.Commit();
+                string updateAvlCnt = "update srajagop.tables set availabilitycount=? where groupID=? and restaurantID=?";
+                tran = null;
+                tran = conn.BeginTransaction();
+                OleDbCommand update_AvlCnt = new OleDbCommand(updateAvlCnt, conn, tran);
+                update_AvlCnt.Parameters.Add("?", OleDbType.Integer).Value = acount[i] - avlCnt;
+                update_AvlCnt.Parameters.Add("?", OleDbType.Integer).Value = groupID;
+                System.Diagnostics.Debug.WriteLine(acount[i] - avlCnt);
+                update_AvlCnt.Parameters.Add("?", OleDbType.Integer).Value = restaurantID;
+                update_AvlCnt.ExecuteNonQuery();
+                tran.Commit();
+                conn.Close();
+            }
+        }        
     }
 }

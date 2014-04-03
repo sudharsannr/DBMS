@@ -24,22 +24,22 @@
     <asp:Label runat="server" AssociatedControlID="CheckBox1" ID="Label1" CssClass="col-md-2 control-label">Choose Seats:</asp:Label>
     <div class="col-md-10">
 
-        <asp:CheckBox ID="CheckBox1" runat="server" OnCheckedChanged="CheckBox1_CheckedChanged" Text="2 Seater" />
+        <asp:CheckBox ID="CheckBox1" runat="server" OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true" Text="2 Seater" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
-        <asp:DropDownList ID="DropDownList1" runat="server" >
+        <asp:DropDownList ID="DropDownList1" runat="server">
         </asp:DropDownList>
         &nbsp;nos<br />
-        <asp:CheckBox ID="CheckBox2" runat="server" Text="4 Seater" OnCheckedChanged="CheckBox2_CheckedChanged" />
+        <asp:CheckBox ID="CheckBox2" runat="server" Text="4 Seater" AutoPostBack="true" OnCheckedChanged="CheckBox2_CheckedChanged" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
-        <asp:DropDownList ID="DropDownList2" runat="server" >
+        <asp:DropDownList ID="DropDownList2" runat="server">
         </asp:DropDownList>
         &nbsp;nos<br />
-        <asp:CheckBox ID="CheckBox3" runat="server" Text="6 Seater"  OnCheckedChanged="CheckBox3_CheckedChanged" />
+        <asp:CheckBox ID="CheckBox3" runat="server" Text="6 Seater"  AutoPostBack="true" OnCheckedChanged="CheckBox3_CheckedChanged" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
-        <asp:DropDownList ID="DropDownList3" runat="server" >
+        <asp:DropDownList ID="DropDownList3" runat="server">
         </asp:DropDownList>
         &nbsp;nos<br />
-        <asp:CheckBox ID="CheckBox4" runat="server" Text="8 Seater"  OnCheckedChanged="CheckBox4_CheckedChanged" />
+        <asp:CheckBox ID="CheckBox4" runat="server" Text="8 Seater"  AutoPostBack="true" OnCheckedChanged="CheckBox4_CheckedChanged" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="DropDownList4" runat="server">
         </asp:DropDownList>
@@ -56,7 +56,7 @@
                 $("#MainContent_datepicker").datepicker();
             });
         </script>
-        <asp:TextBox ID="datepicker" runat="server" OnTextChanged="datepicker_TextChanged"></asp:TextBox>
+        <asp:TextBox ID="datepicker" AutoPostBack="true" runat="server" OnTextChanged="datepicker_TextChanged"></asp:TextBox>
         <br />
         <br />
         <br />
@@ -69,9 +69,14 @@
     <asp:Label runat="server" AssociatedControlID="EMailID" ID="EMailLabel" CssClass="col-md-2 control-label">EMail Address*</asp:Label>
     <div class="col-md-10">
         <asp:TextBox runat="server" ID="EMailID" CssClass="form-control" />
-        <asp:RequiredFieldValidator runat="server" ControlToValidate="EMailID"
+        <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="EMailID"
             CssClass="text-danger" ErrorMessage="The user name field is required." />
     </div>
-    <asp:Button ID="Button1" runat="server" Text="Reserve" CssClass="btn btn-default" />
+    <div class="col-md-10">
+        <p>
+            <asp:Button ID="Button1" runat="server" Text="Reserve" CssClass="btn btn-default" OnClick="Button1_Click" />
+        </p>
+    </div>
+    
     <br />
 </asp:Content>
