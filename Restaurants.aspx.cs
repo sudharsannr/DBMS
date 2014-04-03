@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.OleDb;
 using System.Data;
+using System.Text;
+using GourmetGuide;
 
 public partial class Account_Restaurants : System.Web.UI.Page
 {
@@ -25,10 +27,15 @@ public partial class Account_Restaurants : System.Web.UI.Page
         {
             rid = Request.QueryString["restaurant"];
             System.Diagnostics.Debug.WriteLine("Helkko " + rid);
-            string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=kart1234;USER ID=kshantar";
+            StringBuilder ConnectionString = new StringBuilder();
+            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                    .Append("USER ID=").Append(ProjectSettings.dbUser);
             string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " +rid;
             string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID =" + rid;
-            OleDbConnection conn = new OleDbConnection(ConnectionString);
+            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand name = new OleDbCommand(cmd, conn);
             OleDbDataReader oReader = name.ExecuteReader();
@@ -82,9 +89,14 @@ public partial class Account_Restaurants : System.Web.UI.Page
         if (Request.QueryString["restaurant"] != null)
         {
             rid = Request.QueryString["restaurant"].ToUpper();
-            string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=kart1234;USER ID=kshantar";
+            StringBuilder ConnectionString = new StringBuilder();
+            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                    .Append("USER ID=").Append(ProjectSettings.dbUser);
             string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID =" + rid;
-            OleDbConnection conn = new OleDbConnection(ConnectionString);
+            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand select_search = new OleDbCommand(cmd1, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
