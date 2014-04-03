@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data.OleDb;
 
 public partial class _Default : Page
 {
@@ -13,4 +14,9 @@ public partial class _Default : Page
         if(val1==true)
             Response.Redirect("/Account/Profile.aspx");
      }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+
+        Response.Redirect("Search.aspx?SearchString=" + Search.Text);
+    }
 }
