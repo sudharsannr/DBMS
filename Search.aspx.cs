@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.OleDb;
 using System.Data;
+using System.Text;
+using GourmetGuide;
 
 public partial class Search : System.Web.UI.Page
 {
@@ -23,9 +25,14 @@ public partial class Search : System.Web.UI.Page
         if(Request.QueryString["SearchString"]!=null)
         {
                 string searchString = Request.QueryString["SearchString"].ToUpper();
-                string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=kart1234;USER ID=kshantar";
+                StringBuilder ConnectionString = new StringBuilder();
+                ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                        .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                        .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                        .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                        .Append("USER ID=").Append(ProjectSettings.dbUser);
                 string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE '%" + searchString + "%' OR UPPER(CITY) LIKE '%" + searchString + "%' OR UPPER(STATE) LIKE '%" + searchString + "%' UNION SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE '%" + searchString + "%')";
-                OleDbConnection conn = new OleDbConnection(ConnectionString);
+                OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
                 conn.Open();
                 OleDbCommand select_search = new OleDbCommand(cmd, conn);
                 OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
@@ -110,9 +117,14 @@ public partial class Search : System.Web.UI.Page
         if (Request.QueryString["SearchString"] != null)
         {
             string searchString = Request.QueryString["SearchString"].ToUpper();
-            string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=kart1234;USER ID=kshantar";
+            StringBuilder ConnectionString = new StringBuilder();
+            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                    .Append("USER ID=").Append(ProjectSettings.dbUser);
             string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE '%" + searchString + "%' OR UPPER(CITY) LIKE '%" + searchString + "%' OR UPPER(STATE) LIKE '%" + searchString + "%' UNION SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE '%" + searchString + "%')";
-            OleDbConnection conn = new OleDbConnection(ConnectionString);
+            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand select_search = new OleDbCommand(cmd, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);

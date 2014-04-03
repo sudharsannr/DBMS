@@ -19,7 +19,7 @@
                     <asp:TextBox runat="server" ID="userName" CssClass="form-control" />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="userName"
                         Display="Dynamic" CssClass="text-danger" ErrorMessage="User name is required" />
-                    <asp:ModelErrorMessage runat="server" ModelStateKey="UserName" CssClass="text-danger" />
+                    <asp:ModelErrorMessage ID="ErrorMessage" runat="server" ModelStateKey="UserName" CssClass="text-danger"/>
                 </div>
             </div>
 

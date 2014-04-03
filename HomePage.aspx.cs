@@ -16,7 +16,6 @@ public partial class _Default : Page
      }
     protected void Button1_Click(object sender, EventArgs e)
     {
-
         Response.Redirect("Search.aspx?SearchString=" + Search.Text);
     }
 }
