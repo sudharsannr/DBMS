@@ -1,9 +1,7 @@
-﻿using GourmetGuide;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -13,23 +11,31 @@ public partial class Account_Default : System.Web.UI.Page
     string name, description, opentime, closetime, city, state, address1, address2, zip;
     int nwdays;
     int[] acount = new int[4];
+    bool val1;
     protected void Page_Load(object sender, EventArgs e)
     {
+        val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+        if(val1)
+        {
+            EMailID.Visible = false;
+            EMailLabel.Visible = false;
+        }
+        else
+        {
+            EMailID.Visible = true;
+            EMailLabel.Visible = true;
+        }
+
         string restaurant_id = Request.QueryString["restaurant"];
-        StringBuilder ConnectionString = new StringBuilder();
-        ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
-                .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
-                .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
-                .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
-                .Append("USER ID=").Append(ProjectSettings.dbUser);
+        string ConnectionString = "Provider=OraOLEDB.Oracle; DATA SOURCE=oracle.cise.ufl.edu:1521/ORCL;PASSWORD=Rsm3171990;USER ID=sr8";
         string cmd = "select name,description,opentime,closetime,city,state,address1,address2,zip,nonworkingdays from srajagop.restaurant where restaurantid = " + restaurant_id;
         string cmd1 = "select availabilitycount from srajagop.tables where groupid = 2 and restaurantid = " + restaurant_id;
         string cmd2 = "select availabilitycount from srajagop.tables where groupid = 4 and restaurantid = " + restaurant_id;
         string cmd3 = "select availabilitycount from srajagop.tables where groupid = 6 and restaurantid = " + restaurant_id;
         string cmd4 = "select availabilitycount from srajagop.tables where groupid = 8 and restaurantid = " + restaurant_id;
         System.Diagnostics.Debug.WriteLine(cmd);
-        System.Diagnostics.Debug.WriteLine(ConnectionString.ToString());
-        OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+        System.Diagnostics.Debug.WriteLine(ConnectionString);
+        OleDbConnection conn = new OleDbConnection(ConnectionString);
         OleDbTransaction tran = null;
         conn.Open();
         OleDbParameter param = new OleDbParameter();
@@ -119,15 +125,15 @@ public partial class Account_Default : System.Web.UI.Page
 
     protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
     {
-        if(CheckBox1.Checked) {
-        DropDownList1.Enabled = true;
-        DropDownList1.Items.Clear();
-        DropDownList1.Items.Add(new ListItem("-select-", "0", true));
-        for (int i = 1; i <= acount[0]; i++)
-        {
-            DropDownList1.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
-        } 
-        }
+            if(CheckBox1.Checked) {
+            DropDownList1.Enabled = true;
+            DropDownList1.Items.Clear();
+            DropDownList1.Items.Add(new ListItem("-select-", "0", true));
+            for (int i = 1; i <= acount[0]; i++)
+            {
+                DropDownList1.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
+            } 
+            }
         else {
             DropDownList1.Items.Clear();
             //DropDownList1.Items.Add(new ListItem("-N/A-", "0", true));
