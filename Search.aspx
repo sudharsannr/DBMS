@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
+﻿
+<%@ Page Title = "Search" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
 
 
 
@@ -8,7 +9,7 @@
         <h1>Gourmet Guide</h1>
         <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
     </div>
-    <div>
+    <div class="row">
             <h2>Need something different?</h2>
             <p>
                 Search anything ranging from Restaurant Name, State, City to Food Item or Cuisine</p>
@@ -16,100 +17,25 @@
             <%--Search--%>
             <div class="form-group">
                 <div class="col-md-10">
-                <asp:TextBox runat="server" ID="SearchTextBox" CssClass="form-control" />
+                <p><asp:TextBox runat="server" ID="SearchTextBox" CssClass="form-control" /></p>
                 </div>
+                
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" />
+                <div class="col-md-10">
+                    <p><asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" /></p> 
                 </div>
             </div>
-        </div>
-    <div>
-        <%--<asp:Repeater ID="RestaurantRepeater" runat="server">
-            <HeaderTemplate>
-                <table border="1">
-                    <th>
-                        Restaurant Name
-                    </th>
-                    
-                    <th>
-                        Cuisine
-                    </th>
-
-                    <th>
-                        Open Time
-                    </th>
-
-                    <th>
-                        Close time
-                    </th>
-
-                    <th>
-                        Address
-                    </th>
-                    
-                    <th>
-                        Address
-                    </th>
-
-                    <th>
-                        City
-                    </th>
-
-                    <th>
-                        State
-                    </th>
-
-                    <th>
-                        Zip Code
-                    </th>
-            </HeaderTemplate>
-            <ItemTemplate>
-                <tr>
-                    <td>
-                       <asp:HyperLink runat="server" class="text" NavigateUrl='<%# "Restaurants.aspx?restaurant=" +DataBinder.Eval(Container.DataItem,"RESTAURANTID")%>' Text='<%#DataBinder.Eval(Container.DataItem,"NAME") %>' ID="Hyperlink1" NAME="Hyperlink1"/>
-                    </td>
-
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"DESCRIPTION") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"OPENTIME") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"CLOSETIME") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"ADDRESS1") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"ADDRESS2") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"CITY") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"STATE") %>
-                    </td>
-                    <td>
-                        <%#DataBinder.Eval(Container.DataItem,"ZIP") %>
-                    </td>
-                </tr>
-
-            </ItemTemplate>
-            <FooterTemplate>
-                </table>
-            </FooterTemplate>
-        </asp:Repeater>--%>
-<%--    <%=str %>--%>
-        <asp:GridView ID="GridView1" runat="server" autogeneratecolumns="False" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">
+   </div>
+    <br />
+    <br />
+    <div class="row" style="align-content:center">
+        <p>
+        <asp:GridView ID="GridView1" runat="server" autogeneratecolumns="False" PageSize="25" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">
             <Columns>
                 <asp:HyperLinkField DataTextField="NAME" HeaderText="Restaurant Name" DataNavigateUrlFields="RESTAURANTID" 
                     DataNavigateUrlFormatString="Restaurants.aspx?restaurant={0}" Text="NAME" SortExpression="NAME"/>
-                
             </Columns> 
-            
             <Columns>
                 <asp:BoundField DataField="Description" HeaderText="Cuisine" SortExpression="DESCRIPTION"/>
             </Columns>
@@ -146,6 +72,7 @@
                 <asp:BoundField Visible="false" DataField="RestaurantID" HeaderText="Restaurant ID" /> 
             </Columns>
         </asp:GridView>
+            </p> 
     </div>
 </asp:Content>
 
