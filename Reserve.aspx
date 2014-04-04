@@ -77,6 +77,6 @@
             <asp:Button ID="Button1" runat="server" Text="Reserve" CssClass="btn btn-default" OnClick="Button1_Click" />
         </p>
     </div>
-    
+    <asp:CheckBox ID="CheckParking" runat="server" Text="Parking"/>
     <br />
 </asp:Content>

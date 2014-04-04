@@ -7,10 +7,12 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using GourmetGuide;
 using System.Text;
+
+//TODO: Mandatory fields and email check if not null so that do not send mail
 public partial class Account_Default : System.Web.UI.Page
 {
     string name, description, opentime, closetime, city, state, address1, address2, zip;
-    int nwdays;
+    int nwdays, parkingCount;
     int[] acount = new int[4];
     bool val1;
     OleDbDataReader oReader;
@@ -18,6 +20,7 @@ public partial class Account_Default : System.Web.UI.Page
     OleDbDataReader oReader2;
     OleDbDataReader oReader3;
     OleDbDataReader oReader4;
+    OleDbDataReader oReader5;
     StringBuilder ConnectionString = new StringBuilder();
     OleDbConnection conn;
     protected void Page_Load(object sender, EventArgs e)
@@ -52,9 +55,11 @@ public partial class Account_Default : System.Web.UI.Page
         {
             DropDownList5.Items.Add(new ListItem("Restaurant Holiday", "Restaurant Holiday", true));
             DropDownList5.Enabled = false;
+            Button1.Enabled = false;
         }
         else
         {
+            Button1.Enabled = true;
             DropDownList5.Enabled = true;
             DropDownList5.Items.Add(new ListItem("-select-", "-select-", true));
             string val;
@@ -158,6 +163,8 @@ public partial class Account_Default : System.Web.UI.Page
             string cmd2 = "select availabilitycount from srajagop.tables where groupid = 4 and restaurantid = " + restaurant_id;
             string cmd3 = "select availabilitycount from srajagop.tables where groupid = 6 and restaurantid = " + restaurant_id;
             string cmd4 = "select availabilitycount from srajagop.tables where groupid = 8 and restaurantid = " + restaurant_id;
+            string cmd5 = "select availability from srajagop.parking where restaurantid = " + restaurant_id;
+            System.Diagnostics.Debug.WriteLine(cmd5);
             
             ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
                     .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
@@ -172,11 +179,13 @@ public partial class Account_Default : System.Web.UI.Page
             OleDbCommand select_tables_4 = new OleDbCommand(cmd2, conn);
             OleDbCommand select_tables_6 = new OleDbCommand(cmd3, conn);
             OleDbCommand select_tables_8 = new OleDbCommand(cmd4, conn);
+            OleDbCommand select_parking = new OleDbCommand(cmd5, conn);
             oReader = select_restaurants.ExecuteReader();
             oReader1 = select_tables_2.ExecuteReader();
             oReader2 = select_tables_4.ExecuteReader();
             oReader3 = select_tables_6.ExecuteReader();
             oReader4 = select_tables_8.ExecuteReader();
+            oReader5 = select_parking.ExecuteReader();
 
 
             oReader.Read();
@@ -184,6 +193,7 @@ public partial class Account_Default : System.Web.UI.Page
             oReader2.Read();
             oReader3.Read();
             oReader4.Read();
+            oReader5.Read();
 
             name = oReader[0].ToString();
             description = oReader[1].ToString();
@@ -196,11 +206,17 @@ public partial class Account_Default : System.Web.UI.Page
             zip = oReader[8].ToString();
             nwdays = System.Convert.ToInt32(oReader[9].ToString());
 
-            acount[0] = System.Convert.ToInt32(oReader1[0].ToString());
+            if(oReader1.HasRows)
+                acount[0] = System.Convert.ToInt32(oReader1[0].ToString());
             System.Diagnostics.Debug.WriteLine(acount[0]);
-            acount[1] = System.Convert.ToInt32(oReader2[0].ToString());
-            acount[2] = System.Convert.ToInt32(oReader3[0].ToString());
-            acount[3] = System.Convert.ToInt32(oReader4[0].ToString());
+            if (oReader2.HasRows)
+                acount[1] = System.Convert.ToInt32(oReader2[0].ToString());
+            if (oReader3.HasRows)
+                acount[2] = System.Convert.ToInt32(oReader3[0].ToString());
+            if (oReader4.HasRows)
+                acount[3] = System.Convert.ToInt32(oReader4[0].ToString());
+            if (oReader5.HasRows)
+                parkingCount = System.Convert.ToInt32(oReader5[0].ToString());
 
             r_name.Text = name;
             r_address.Text = address1 + "\n" + address2 + "\n" + city + ", " + state + " - " + zip;
@@ -209,6 +225,9 @@ public partial class Account_Default : System.Web.UI.Page
             DropDownList2.Enabled = en[1];
             DropDownList3.Enabled = en[2];
             DropDownList4.Enabled = en[3];
+
+            if (parkingCount == 0)
+                CheckParking.Enabled = false;
             conn.Close();
         }
     }
@@ -235,6 +254,7 @@ public partial class Account_Default : System.Web.UI.Page
         bool[] en = { CheckBox1.Checked, CheckBox2.Checked, CheckBox3.Checked, CheckBox4.Checked };
         int restaurantID=Int32.Parse(Request.QueryString["restaurant"]);
         int groupID=1;
+        string bookDetails = "";
         List<DropDownList> ls = new List<DropDownList>();
         ls.Add(DropDownList1);
         ls.Add(DropDownList2);
@@ -242,8 +262,10 @@ public partial class Account_Default : System.Web.UI.Page
         ls.Add(DropDownList4);
         //int[] AvailabilityCount={Int32.Parse(DropDownList1.SelectedValue),Int32.Parse(DropDownList2.SelectedValue),Int32.Parse(DropDownList3.SelectedValue),Int32.Parse(DropDownList4.SelectedValue)};
         int avlCnt=0;
+        bookDetails += "Restaurant: " + name + "\n";
         for(int i=0;i<4;i++)
         {
+            avlCnt = 0;
             if (en[i] == true)
             {
                 groupID = (i + 1) * 2;
@@ -274,8 +296,42 @@ public partial class Account_Default : System.Web.UI.Page
                 update_AvlCnt.Parameters.Add("?", OleDbType.Integer).Value = restaurantID;
                 update_AvlCnt.ExecuteNonQuery();
                 tran.Commit();
+                
+                bookDetails += "Table for " + groupID + " totaling for " + (groupID * avlCnt) + " persons"
+                             + " on " + datepicker.Text + " at " + DropDownList5.SelectedValue + ".\n";
                 conn.Close();
             }
-        }        
+        }
+        if (CheckParking.Checked)
+        {
+            string insertParkingcmd = "insert into srajagop.parkingreserve values(?,?)";
+            OleDbTransaction tran = null;
+            conn.Open();
+            tran = conn.BeginTransaction();
+            OleDbCommand insert_parkingreserve = new OleDbCommand(insertParkingcmd, conn, tran);
+            insert_parkingreserve.Parameters.Add("?", OleDbType.Integer).Value = restaurantID;
+            insert_parkingreserve.Parameters.Add("?", OleDbType.VarChar).Value = eMail;
+            insert_parkingreserve.ExecuteNonQuery();
+            tran.Commit();
+            string updatePrkCnt = "update srajagop.parking set availability=? where restaurantID=?";
+            tran = null;
+            tran = conn.BeginTransaction();
+            OleDbCommand update_PrkCnt = new OleDbCommand(updatePrkCnt, conn, tran);
+            update_PrkCnt.Parameters.Add("?", OleDbType.Integer).Value = parkingCount - 1;
+            System.Diagnostics.Debug.WriteLine(parkingCount - 1);
+            update_PrkCnt.Parameters.Add("?", OleDbType.Integer).Value = restaurantID;
+            update_PrkCnt.ExecuteNonQuery();
+            tran.Commit();
+            bookDetails += "Parking valet reserved.\n";
+        }
+
+        string subject;
+        var content = "";
+        subject = "GourmetGuide reservation confirmation";
+        content = "Hi. \n\nHere are the details for your reservation done a few minutes ago:\n\n" + bookDetails + "\n\n"
+                  + "GourmetGuide team.";
+        SendMail sm = new SendMail(eMail, null, subject, content);
+        sm.send();
+        Response.Redirect("/Account/Profile.aspx", true);
     }
 }
