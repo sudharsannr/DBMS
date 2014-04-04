@@ -27,23 +27,39 @@
         <asp:CheckBox ID="CheckBox1" runat="server" OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true" Text="2 Seater" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="DropDownList1" runat="server">
+            <asp:ListItem>-select-</asp:ListItem>
         </asp:DropDownList>
         &nbsp;nos<br />
+        <asp:RequiredFieldValidator ID="ddValidator1" runat="server" ControlToValidate="DropDownList1"
+            CssClass="text-danger" ErrorMessage="Please select a value." InitialValue="-select-"/>
+        <br />
         <asp:CheckBox ID="CheckBox2" runat="server" Text="4 Seater" AutoPostBack="true" OnCheckedChanged="CheckBox2_CheckedChanged" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="DropDownList2" runat="server">
+            <asp:ListItem>-select-</asp:ListItem>
         </asp:DropDownList>
         &nbsp;nos<br />
+        <asp:RequiredFieldValidator ID="ddValidator2" runat="server" ControlToValidate="DropDownList2"
+            CssClass="text-danger" ErrorMessage="Please select a value." InitialValue="-select-"/>
+        <br />
         <asp:CheckBox ID="CheckBox3" runat="server" Text="6 Seater"  AutoPostBack="true" OnCheckedChanged="CheckBox3_CheckedChanged" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="DropDownList3" runat="server">
+            <asp:ListItem>-select-</asp:ListItem>
         </asp:DropDownList>
         &nbsp;nos<br />
+        <asp:RequiredFieldValidator ID="ddValidator3" runat="server" ControlToValidate="DropDownList3"
+            CssClass="text-danger" ErrorMessage="Please select a value." InitialValue="-select-"/>
+        <br />
         <asp:CheckBox ID="CheckBox4" runat="server" Text="8 Seater"  AutoPostBack="true" OnCheckedChanged="CheckBox4_CheckedChanged" />
         &nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp;
         <asp:DropDownList ID="DropDownList4" runat="server">
+            <asp:ListItem>-select-</asp:ListItem>
         </asp:DropDownList>
         &nbsp;nos<br />
+        <asp:RequiredFieldValidator ID="ddValidator4" runat="server" ControlToValidate="DropDownList4"
+            CssClass="text-danger" ErrorMessage="Please select a value." InitialValue="-select-"/>
+        <br />
         <br />
     </div>
     <asp:Label runat="server" AssociatedControlID="CheckBox1" ID="Label2" CssClass="col-md-2 control-label">Choose Date and Time</asp:Label>
@@ -60,9 +76,15 @@
         <br />
         <br />
         <br />
+        
         <asp:DropDownList ID="DropDownList5" runat="server">
+            <asp:ListItem>-select-</asp:ListItem>
         </asp:DropDownList>
-        &nbsp;&nbsp;&nbsp; Hrs<br />
+        &nbsp;&nbsp;&nbsp; Hrs
+        <br />
+        <asp:RequiredFieldValidator ID="ddValidator5" runat="server" ControlToValidate="DropDownList5"
+            CssClass="text-danger" ErrorMessage="Please select the time." InitialValue="-select-"/>
+        <br />
         <br />
         <br />
     </div>
@@ -70,7 +92,16 @@
     <div class="col-md-10">
         <asp:TextBox runat="server" ID="EMailID" CssClass="form-control" />
         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="EMailID"
-            CssClass="text-danger" ErrorMessage="The user name field is required." />
+            CssClass="text-danger" ErrorMessage="EMail ID is required." />
+        <asp:RegularExpressionValidator id="RegularExpressionValidator5" 
+                ControlToValidate="EMailID"
+                ValidationExpression="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}"
+                Display="Static"
+                ErrorMessage="Invalid E-Mail Address"
+                CssClass="text-danger"
+                EnableClientScript="True" 
+                runat="server"/>
+
     </div>
     <div class="col-md-10">
         <p>

@@ -25,6 +25,10 @@ public partial class Account_Default : System.Web.UI.Page
     OleDbConnection conn;
     protected void Page_Load(object sender, EventArgs e)
     {
+        ddValidator1.Enabled = false;
+        ddValidator2.Enabled = false;
+        ddValidator3.Enabled = false;
+        ddValidator4.Enabled = false;
         val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
         if(val1)
         {
@@ -75,9 +79,13 @@ public partial class Account_Default : System.Web.UI.Page
 
     protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
     {
+        ddValidator1.Enabled = false;
+        ddValidator2.Enabled = false;
+        ddValidator3.Enabled = false;
+        ddValidator4.Enabled = false;
         if(CheckBox1.Checked) {
             DropDownList1.Enabled = true;
-            
+            ddValidator1.Enabled = true;            
             DropDownList1.Items.Clear();
             DropDownList1.Items.Add(new ListItem("-select-", "0", true));
             for (int i = 1; i <= acount[0]; i++)
@@ -88,6 +96,8 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList1.Items.Clear();
+            DropDownList1.Items.Add(new ListItem("-select-", null , true));
+            ddValidator1.Enabled = false;
             //DropDownList1.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList1.Enabled = false;
         }
@@ -97,9 +107,14 @@ public partial class Account_Default : System.Web.UI.Page
     }    
     protected void CheckBox2_CheckedChanged(object sender, EventArgs e)
     {
+        ddValidator1.Enabled = false;
+        ddValidator2.Enabled = false;
+        ddValidator3.Enabled = false;
+        ddValidator4.Enabled = false;
         if (CheckBox2.Checked)
         {
         DropDownList2.Enabled = true;
+        ddValidator2.Enabled = true;
         DropDownList2.Items.Clear();
         DropDownList2.Items.Add(new ListItem("-select-", "0", true));
         for (int i = 1; i <= acount[1]; i++)
@@ -110,15 +125,22 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList2.Items.Clear();
+            DropDownList2.Items.Add(new ListItem("-select-", null, true));
+            ddValidator2.Enabled = false;
             //DropDownList2.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList2.Enabled = false;
         }
     }
     protected void CheckBox3_CheckedChanged(object sender, EventArgs e)
     {
+        ddValidator1.Enabled = false;
+        ddValidator2.Enabled = false;
+        ddValidator3.Enabled = false;
+        ddValidator4.Enabled = false;
         if (CheckBox3.Checked)
         {
         DropDownList3.Enabled = true;
+        ddValidator3.Enabled = true;
         DropDownList3.Items.Clear();
         DropDownList3.Items.Add(new ListItem("-select-", "0", true));
         for (int i = 1; i <= acount[2]; i++)
@@ -129,15 +151,22 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList3.Items.Clear();
+            DropDownList3.Items.Add(new ListItem("-select-", null, true));
+            ddValidator3.Enabled = false;
             //DropDownList3.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList3.Enabled = false;
         }
     }
     protected void CheckBox4_CheckedChanged(object sender, EventArgs e)
     {
+        ddValidator1.Enabled = false;
+        ddValidator2.Enabled = false;
+        ddValidator3.Enabled = false;
+        ddValidator4.Enabled = false;
         if (CheckBox4.Checked)
         {
             DropDownList4.Enabled = true;
+            ddValidator4.Enabled = true;
             DropDownList4.Items.Clear();
             DropDownList4.Items.Add(new ListItem("-select-", "0", true));
             for (int i = 1; i <= acount[3]; i++)
@@ -148,6 +177,8 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList4.Items.Clear();
+            DropDownList4.Items.Add(new ListItem("-select-", null, true));
+            ddValidator4.Enabled = false;
             //DropDownList4.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList4.Enabled = false;
         }
