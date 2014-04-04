@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Reserve.aspx.cs" Inherits="Account_Default" %>
+﻿<%@ Page Title="Reservation Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Reserve.aspx.cs" Inherits="Account_Default" %>
 
 
 
@@ -105,9 +105,12 @@
     </div>
     <div class="col-md-10">
         <p>
-            <asp:Button ID="Button1" runat="server" Text="Reserve" CssClass="btn btn-default" OnClick="Button1_Click" />
+            <asp:CheckBox ID="CheckParking" runat="server" Text="Check for Reserving Parking Slot"/>
         </p>
     </div>
-    <asp:CheckBox ID="CheckParking" runat="server" Text="Parking"/>
-    <br />
+    <div class="col-md-10">
+        <p>
+            <asp:Button ID="Button1" runat="server" Text="Reserve" CssClass="btn btn-default" OnClick="Button1_Click" />
+        </p>
+    </div>     
 </asp:Content>
