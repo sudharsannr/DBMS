@@ -25,11 +25,40 @@ public partial class Account_Default : System.Web.UI.Page
     OleDbConnection conn;
     protected void Page_Load(object sender, EventArgs e)
     {
-        ddValidator1.Enabled = false;
-        ddValidator2.Enabled = false;
-        ddValidator3.Enabled = false;
-        ddValidator4.Enabled = false;
-        val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+        
+        List<RequiredFieldValidator> ddValidatorList = new List<RequiredFieldValidator>();
+        List<CheckBox> checkBoxList = new List<CheckBox>();
+        ddValidatorList.Add(ddValidator1);
+        ddValidatorList.Add(ddValidator2);
+        ddValidatorList.Add(ddValidator3);
+        ddValidatorList.Add(ddValidator4);
+        checkBoxList.Add(CheckBox1);
+        checkBoxList.Add(CheckBox2);
+        checkBoxList.Add(CheckBox3);
+        checkBoxList.Add(CheckBox4);
+        int checkedCount = 0;
+        for (int i = 0; i < checkBoxList.Count; i++ )
+        {
+            if (checkBoxList[i].Checked)
+                ddValidatorList[i].Enabled = true;
+            else
+            {
+                checkedCount++;
+                ddValidatorList[i].Enabled = false;
+
+            }
+        }
+
+        if (checkedCount == 4)
+            ddValidatorList[0].Enabled = true;
+            //ddValidator1.Enabled = false;
+            //ddValidator2.Enabled = false;
+            //ddValidator3.Enabled = false;
+            //ddValidator4.Enabled = false;
+
+            if (CheckBox1.Checked)
+
+                val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
         if(val1)
         {
             EMailID.Enabled = false;
@@ -65,7 +94,7 @@ public partial class Account_Default : System.Web.UI.Page
         {
             Button1.Enabled = true;
             DropDownList5.Enabled = true;
-            DropDownList5.Items.Add(new ListItem("-select-", "-select-", true));
+            DropDownList5.Items.Add(new ListItem("-select-", "0", true));
             string val;
             for (int i = otime; i < ctime; i += 100)
             {
@@ -96,7 +125,7 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList1.Items.Clear();
-            DropDownList1.Items.Add(new ListItem("-select-", null , true));
+            DropDownList1.Items.Add(new ListItem("-select-", "0" , true));
             ddValidator1.Enabled = false;
             //DropDownList1.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList1.Enabled = false;
@@ -125,7 +154,7 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList2.Items.Clear();
-            DropDownList2.Items.Add(new ListItem("-select-", null, true));
+            DropDownList2.Items.Add(new ListItem("-select-", "0", true));
             ddValidator2.Enabled = false;
             //DropDownList2.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList2.Enabled = false;
@@ -151,7 +180,7 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList3.Items.Clear();
-            DropDownList3.Items.Add(new ListItem("-select-", null, true));
+            DropDownList3.Items.Add(new ListItem("-select-", "0", true));
             ddValidator3.Enabled = false;
             //DropDownList3.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList3.Enabled = false;
@@ -177,7 +206,7 @@ public partial class Account_Default : System.Web.UI.Page
         else
         {
             DropDownList4.Items.Clear();
-            DropDownList4.Items.Add(new ListItem("-select-", null, true));
+            DropDownList4.Items.Add(new ListItem("-select-", "0", true));
             ddValidator4.Enabled = false;
             //DropDownList4.Items.Add(new ListItem("-N/A-", "0", true));
             DropDownList4.Enabled = false;
