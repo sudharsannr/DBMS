@@ -1,29 +1,34 @@
-﻿<%@ Page Title = "Search" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
+﻿
+<%@ Page Title = "AdvancedSearch" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="AdvancedSearch.aspx.cs" Inherits="AdvancedSearch" %>
 
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     
-    <div class="jumbotron">
-        <h1>Gourmet Guide</h1>
-        <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
-    </div>
-    <div class="row">
-            <h2>Need something different?</h2>
+     <div class="row">
+            <h2>Search Differently</h2>
             <p>
-                Search anything ranging from Restaurant Name, State, City to Food Item or Cuisine</p>
+                Search anything ranging from Restaurant Name, State, City, Open,Close time to Food Item or Cuisine with your custom specification</p>
                   
-            <%--Search--%>
             <div class="form-group">
                 <div class="col-md-10">
-                <p><asp:TextBox runat="server" ID="SearchTextBox" CssClass="form-control" /></p>
+                <table>
+                <tr ><td>Restaurant Name <asp:TextBox  runat="server" ID="NameSearch" CssClass="form-control"/></td>
+                <td>Cuisine <asp:TextBox runat="server" ID="CuisineSearch" CssClass="form-control" /></td></tr>
+                <tr><td>Open Time<asp:TextBox runat="server" ID="OpenTimeSearch" CssClass="form-control" /></td>
+                <td>Close Time<asp:TextBox runat="server" ID="CloseTimeSearch" CssClass="form-control" /></td></tr>
+                <tr><td>City<asp:TextBox runat="server" ID="CitrySearch" CssClass="form-control" /></td>
+                <td>Zip Code<asp:TextBox runat="server" ID="ZipSearch" CssClass="form-control" /></td></tr>
+                <tr><td>State<asp:TextBox runat="server" ID="StateSearch" CssClass="form-control" /></td>
+                <td>Food<asp:TextBox runat="server" ID="FoodSearch" CssClass="form-control" /></td></tr>
+               
+                </table>
                 </div>
                 
             </div>
             <div class="form-group">
                 <div class="col-md-10">
-                    <p><asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" />
-                        <asp:Button ID="Button2" runat="server" Text="Advanced Search" CssClass="btn btn-default" OnClick="Button2_Click" /></p> 
+                    <p><asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" /></p> 
                 </div>
             </div>
    </div>
@@ -31,7 +36,7 @@
     <br />
     <div class="row" style="align-content:center">
         <p>
-        <asp:GridView ID="GridView1" runat="server" autogeneratecolumns="False" PageSize="25" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">
+        <asp:GridView ID="GridView2" runat="server" autogeneratecolumns="False" PageSize="25" AllowPaging="true" OnPageIndexChanging="GridView2_PageIndexChanging" AllowSorting="true" OnSorting="GridView2_Sorting">
             <Columns>
                 <asp:HyperLinkField DataTextField="NAME" HeaderText="Restaurant Name" DataNavigateUrlFields="RESTAURANTID" 
                     DataNavigateUrlFormatString="Restaurants.aspx?restaurant={0}" Text="NAME" SortExpression="NAME"/>
@@ -74,4 +79,6 @@
         </asp:GridView>
             </p> 
     </div>
+
 </asp:Content>
+
