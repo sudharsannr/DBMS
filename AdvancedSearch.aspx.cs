@@ -17,7 +17,12 @@ public partial class AdvancedSearch : System.Web.UI.Page
     DataSet tbl = new DataSet();
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        //TODO: Check correctness
+        if (!IsPostBack)
+        {
+            ViewState["sortOrder"] = "";
+            bindGridView("", "");
+        }        
     }
 
     protected void Button1_Click(object sender, EventArgs e)
@@ -216,11 +221,12 @@ public partial class AdvancedSearch : System.Web.UI.Page
         string zipsearchString;
         string statesearchString;
         string foodsearchString;
-        if (!IsPostBack)
+        //TODO: Check correctness
+        /*if (!IsPostBack)
         {
             ViewState["sortOrder"] = "";
             bindGridView("", "");
-        }
+        }*/
 
         if (NameSearch.Text.Trim().Length == 0)
         {
