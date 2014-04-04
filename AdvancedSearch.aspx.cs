@@ -17,7 +17,6 @@ public partial class AdvancedSearch : System.Web.UI.Page
     DataSet tbl = new DataSet();
     protected void Page_Load(object sender, EventArgs e)
     {
-        //TODO: Check correctness
         if (!IsPostBack)
         {
             ViewState["sortOrder"] = "";
