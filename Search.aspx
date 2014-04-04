@@ -1,4 +1,4 @@
-﻿<%@ Page Title = "Search" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
+﻿<%@ Page Title = "Restaurant Search" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
 
 
 

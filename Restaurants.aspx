@@ -1,4 +1,4 @@
-﻿<%@ Page Title = "Restaurants" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Restaurants.aspx.cs" Inherits="Account_Restaurants" %>
+﻿<%@ Page Title = "Restaurant Details" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Restaurants.aspx.cs" Inherits="Account_Restaurants" %>
     
 
 <%--   <div id="Restaurant Name">

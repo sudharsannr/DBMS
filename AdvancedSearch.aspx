@@ -1,5 +1,5 @@
 ﻿
-<%@ Page Title = "AdvancedSearch" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="AdvancedSearch.aspx.cs" Inherits="AdvancedSearch" %>
+<%@ Page Title = "Advanced Search" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="AdvancedSearch.aspx.cs" Inherits="AdvancedSearch" %>
 
 
 
