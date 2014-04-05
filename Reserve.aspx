@@ -106,9 +106,22 @@
                 runat="server"/>
 
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10" id="Parking" runat="server">
         <p>
-            <asp:CheckBox ID="CheckParking" runat="server" Text="Check for Reserving Parking Slot"/>
+            <asp:CheckBox ID="CheckParking" runat="server" Text="Check for Reserving Parking Slot" AutoPostBack="true" OnCheckedChanged="CheckParking_CheckedChanged"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:DropDownList ID="ParkingDropDownList" runat="server" Enabled="false" >
+                <asp:ListItem Value="0">-select-</asp:ListItem>
+            </asp:DropDownList>
+            <asp:RequiredFieldValidator ID="rfvParkingValidator" runat="server" ControlToValidate="ParkingDropDownList"
+            CssClass="text-danger" ErrorMessage="Select number of slots" InitialValue="0"/>
+            
+        </p>
+    </div>
+    <div class="col-md-10" id="ParkingFull" runat="server" visible="false" >
+        <br />
+        <p class="text-danger">
+            Sorry! None of the parking slots are currently available for reservation.
         </p>
     </div>
     <div class="col-md-10">
