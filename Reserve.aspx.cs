@@ -15,6 +15,8 @@ public partial class Account_Default : System.Web.UI.Page
     int nwdays, parkingCount;
     int[] acount = new int[4];
     bool val1;
+    List<DropDownList> ls = new List<DropDownList>();
+    
     
     OleDbDataReader oReader;
     OleDbDataReader oReader1;
@@ -24,6 +26,7 @@ public partial class Account_Default : System.Web.UI.Page
     OleDbDataReader oReader5;
     StringBuilder ConnectionString = new StringBuilder();
     OleDbConnection conn;
+    List<RequiredFieldValidator> ddValidatorList; 
     protected void Page_Load(object sender, EventArgs e)
     {
         populateItems();
@@ -69,7 +72,7 @@ public partial class Account_Default : System.Web.UI.Page
         //ddValidator4.Enabled = false;
         if (CheckBox1.Checked)
         {
-            if (acount[3] != 0)
+            if (acount[0] != 0)
             {
                 DropDownList1.Enabled = true;
                 ddValidator1.Enabled = true;
@@ -80,6 +83,10 @@ public partial class Account_Default : System.Web.UI.Page
                     DropDownList1.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
                 }
             }
+            //else
+            //{
+            //    ddValidatorList[0].Text = "Sorry! No 2 seaters available. Uncheck this option and choose an alternate seating ";
+            //}
         }
         else
         {
@@ -112,6 +119,10 @@ public partial class Account_Default : System.Web.UI.Page
                     DropDownList2.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
                 }
             }
+            //else
+            //{
+            //    ddValidatorList[1].Text = "Sorry! No 4 seaters available. Uncheck this option and choose an alternate seating ";
+            //}
         }
         else
         {
@@ -141,6 +152,10 @@ public partial class Account_Default : System.Web.UI.Page
                     DropDownList3.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
                 }
             }
+            //else
+            //{
+            //    ddValidatorList[2].Text = "Sorry! No 6 seaters available. Uncheck this option and choose an alternate seating ";
+            //}
         }
         else
         {
@@ -170,6 +185,10 @@ public partial class Account_Default : System.Web.UI.Page
                     DropDownList4.Items.Add(new ListItem(i.ToString(), i.ToString(), true));
                 }
             }
+            //else
+            //{
+            //    ddValidatorList[3].Text = "Sorry! No 8 seaters available. Uncheck this option and choose an alternate seating ";
+            //}
         }
         else
         {
@@ -185,32 +204,26 @@ public partial class Account_Default : System.Web.UI.Page
     {
         if (Request.QueryString["restaurant"] != null)
         {
-            List<RequiredFieldValidator> ddValidatorList = new List<RequiredFieldValidator>();
+            ddValidatorList = new List<RequiredFieldValidator>();
             List<CheckBox> checkBoxList = new List<CheckBox>();
+            ddValidatorList.Clear();
             ddValidatorList.Add(ddValidator1);
             ddValidatorList.Add(ddValidator2);
             ddValidatorList.Add(ddValidator3);
             ddValidatorList.Add(ddValidator4);
             ddValidatorList.Add(rfvParkingValidator);
+            checkBoxList.Clear();
             checkBoxList.Add(CheckBox1);
             checkBoxList.Add(CheckBox2);
             checkBoxList.Add(CheckBox3);
             checkBoxList.Add(CheckBox4);
             checkBoxList.Add(CheckParking);
-            int checkedCount = 0;
-            for (int i = 0; i < checkBoxList.Count; i++)
-            {
-                if (checkBoxList[i].Checked)
-                    ddValidatorList[i].Enabled = true;
-                else
-                {
-                    checkedCount++;
-                    ddValidatorList[i].Enabled = false;
-                }
-            }
-
-            if (checkedCount == 4)
-                ddValidatorList[0].Enabled = true;
+            ls.Clear();
+            ls.Add(DropDownList1);
+            ls.Add(DropDownList2);
+            ls.Add(DropDownList3);
+            ls.Add(DropDownList4);
+            
             //ddValidator1.Enabled = false;
             //ddValidator2.Enabled = false;
             //ddValidator3.Enabled = false;
@@ -291,13 +304,6 @@ public partial class Account_Default : System.Web.UI.Page
                 acount[3] = System.Convert.ToInt32(oReader4[0].ToString());
             if (oReader5.HasRows)
                 parkingCount = System.Convert.ToInt32(oReader5[0].ToString());
-            for (int i = 0; i < acount.Length; i++)
-            {
-                if (acount[i] == 0)
-                {
-                    ddValidatorList[i].Text = "Sorry! No " + (i + 1) * 2 + " seaters available. Uncheck this option and choose an alternate seating ";
-                }
-            }
             r_name.Text = name;
             r_address.Text = address1 + "\n" + address2 + "\n" + city + ", " + state + " - " + zip;
             bool[] en = { CheckBox1.Checked, CheckBox2.Checked, CheckBox3.Checked, CheckBox4.Checked, CheckParking.Checked };
@@ -314,9 +320,46 @@ public partial class Account_Default : System.Web.UI.Page
                 rfvParkingValidator.Enabled = false;
                 ParkingFull.Visible = true;
             }
+
+            //Disable checkbox when the number of tables is zero
+            int disabledCount = 0;
+            for (int i = 0; i < acount.Length; i++ )
+            {
+                if (acount[i] == 0)
+                {
+                    checkBoxList[i].Enabled = false;
+                    ddValidatorList[i].Enabled = false;
+                    ls[i].Enabled = false;
+                    disabledCount++;
+                }
+
+            }
+
+            //If none of checkboxes is checked, generate error
+            int uncheckedCount = 0;
+            for (int i = 0; i < checkBoxList.Count; i++)
+            {
+                if (checkBoxList[i].Checked)
+                    ddValidatorList[i].Enabled = true;
+                else if(checkBoxList[i].Enabled)
+                {
+                    if(i < 4)
+                        uncheckedCount++;
+                    ddValidatorList[i].Enabled = false;
+                }
+            }
+
+            if (uncheckedCount == 4 - disabledCount)
+            {
+                ddValidatorList[0].Enabled = true;
+                ddValidatorList[0].Text = "Please select seats";
+            }
+            else
+                ddValidatorList[0].Enabled = false;
             conn.Close();
         }
     }
+
     protected void Button1_Click(object sender, EventArgs e)
     {
         string eMail;
@@ -341,11 +384,7 @@ public partial class Account_Default : System.Web.UI.Page
         int restaurantID = Int32.Parse(Request.QueryString["restaurant"]);
         int groupID = 1;
         string bookDetails = "";
-        List<DropDownList> ls = new List<DropDownList>();
-        ls.Add(DropDownList1);
-        ls.Add(DropDownList2);
-        ls.Add(DropDownList3);
-        ls.Add(DropDownList4);
+        
 
         //int[] AvailabilityCount={Int32.Parse(DropDownList1.SelectedValue),Int32.Parse(DropDownList2.SelectedValue),Int32.Parse(DropDownList3.SelectedValue),Int32.Parse(DropDownList4.SelectedValue)};
         int avlCnt = 0;
@@ -388,6 +427,7 @@ public partial class Account_Default : System.Web.UI.Page
                              + " on " + datepicker.Text + " at " + DropDownList5.SelectedValue + ".\n";
                 conn.Close();
             }
+        
         }
         if (CheckParking.Checked)
         {
