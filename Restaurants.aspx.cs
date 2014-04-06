@@ -13,11 +13,14 @@ public partial class Account_Restaurants : System.Web.UI.Page
 {
     DataSet tbl = new DataSet();
     public string str;
-    public string str1;
+    public string cuisine;
     public string rName;
     public string rid;
+    public string addressStr;
+    public string workingHours;
+    public String location;
     public string gUrl = "http://maps.googleapis.com/maps/api/js?key=" + ProjectSettings.googleMapsKey + "&sensor=false";
-
+    public string holiday;
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -35,25 +38,34 @@ public partial class Account_Restaurants : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE RESTAURANTID = " +rid;
+            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS FROM SRAJAGOP.RESTAURANT WHERE RESTAURANTID = " + rid;
             string cmd1 = "SELECT DISTINCT SRAJAGOP.FOOD.NAME, SRAJAGOP.FDPRICECATALOG.PRICE FROM SRAJAGOP.FOOD INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID INNER JOIN SRAJAGOP.RESTAURANT ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID WHERE SRAJAGOP.RESTAURANT.RESTAURANTID =" + rid;
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand name = new OleDbCommand(cmd, conn);
             OleDbDataReader oReader = name.ExecuteReader();
             oReader.Read();
-            str = oReader[0].ToString();
-            str1 = oReader[1].ToString();
-            String location = oReader[4].ToString() + ", "
-                             + oReader[5].ToString() + ", "
-                             + oReader[6].ToString() + ", "
-                             + oReader[7].ToString() + ", "
-                             + oReader[8].ToString();
-
-       
+            rName = oReader[0].ToString();
+            cuisine = oReader[1].ToString();
+            cuisine = cuisine.Replace("restaurant", "");
+            location = oReader[4].ToString() + ", "
+                              + oReader[5].ToString() + ", "
+                              + oReader[6].ToString() + ", "
+                              + oReader[7].ToString() + ", "
+                              + oReader[8].ToString();
+            workingHours = oReader[2].ToString() + " - " + oReader[3].ToString();
+            string[] days = { "Working All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            holiday = days[System.Convert.ToInt32(oReader[10].ToString())];
+            
             OleDbCommand select_search = new OleDbCommand(cmd1, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
             oAdapter.Fill(tbl);
+            if (tbl.Tables[0].Rows.Count == 0)
+            {
+                NoResult.Visible = true;
+            }
+            else
+                NoResult.Visible = false;
             //RestaurantRepeater.DataSource = oReader;
             //RestaurantRepeater.DataBind();
             GridView1.DataSource = tbl.Tables[0];
