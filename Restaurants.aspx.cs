@@ -138,4 +138,8 @@ public partial class Account_Restaurants : System.Web.UI.Page
     {
         Response.Redirect("~/Reserve?restaurant=" + rid);
     }
+    protected void FoodReserve_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/OrderFood?restaurant=" + rid);
+    }
 }
