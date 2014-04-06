@@ -32,7 +32,7 @@ public partial class Account_Login : Page
             {
                 // Validate the user password
                 if (!checkRegistrationComplete(UserName.Text))
-                    Response.Redirect("/Account/ConfirmCode.aspx?user=" + UserName.Text);
+                    Response.Redirect("/Account/ConfirmCode.aspx?user=" + UserName.Text + "&url=Login");
                 else
                 {
                     var manager = new UserManager();
