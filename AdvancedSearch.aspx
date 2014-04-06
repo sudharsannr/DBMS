@@ -79,6 +79,10 @@
         </asp:GridView>
             </p> 
     </div>
-
+<div class="row" id="NoResult" runat="server" visible="false">
+    <p class="text-danger">
+        No restaurants found. Please choose different search criteria
+    </p>
+</div>
 </asp:Content>
 
