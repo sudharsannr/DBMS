@@ -16,6 +16,8 @@ public partial class Account_Restaurants : System.Web.UI.Page
     public string str1;
     public string rName;
     public string rid;
+    public string gUrl = "http://maps.googleapis.com/maps/api/js?key=" + ProjectSettings.googleMapsKey + "&sensor=false";
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -42,6 +44,12 @@ public partial class Account_Restaurants : System.Web.UI.Page
             oReader.Read();
             str = oReader[0].ToString();
             str1 = oReader[1].ToString();
+            String location = oReader[4].ToString() + ", "
+                             + oReader[5].ToString() + ", "
+                             + oReader[6].ToString() + ", "
+                             + oReader[7].ToString() + ", "
+                             + oReader[8].ToString();
+
        
             OleDbCommand select_search = new OleDbCommand(cmd1, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
@@ -52,6 +60,7 @@ public partial class Account_Restaurants : System.Web.UI.Page
             GridView1.DataBind();
             GridView1.PagerSettings.Mode = PagerButtons.Numeric;
             conn.Close();
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps('" + location + "')", true);
         }
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
