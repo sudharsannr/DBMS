@@ -51,14 +51,23 @@ function updatePrice(oldamount, newAmt)
 function gatherData()
 {
     var data = "";
+    var checked = false;
     console.log("Inside gatherData");
     $("input[type=checkbox]:checked").each(function () {
+        checked = true;
         var rowNum = this.id.split("_")[1];
         console.log("RowNum : " + rowNum);
+        if ($("#fd_total_" + rowNum).text() == "0.00")
+        {
+            checked = false;
+            return false;
+        }
         data += $("#fd_name_" + rowNum).text() + "|" + $("#fd_total_" + rowNum).text()
                 + "~";
         console.log($("#fd_name_" + rowNum).text() + "--" + $("#fd_total_" + rowNum).text());
     });
+    if (!checked)
+        data = "no data";
     $("#MainContent_OrderData").val(data);
     $("#MainContent_TotalPrice").val($("#totalPrice").text());
 }

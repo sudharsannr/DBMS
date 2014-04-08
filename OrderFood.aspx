@@ -18,6 +18,7 @@
     </div>
     <asp:Label runat="server" AssociatedControlID="EMailID" ID="EMailLabel" CssClass="col-md-2 control-label">EMail Address*</asp:Label>
         <asp:TextBox runat="server" ID="EMailID" CssClass="form-control" />
+        <asp:Label ID="CheckBoxValidator" runat="server" CssClass="text-danger" Text="Please check and enter your booking details."/>
         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="EMailID"
             CssClass="text-danger" ErrorMessage="EMail ID is required." />
         <asp:RegularExpressionValidator id="RegularExpressionValidator5" 
