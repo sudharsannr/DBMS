@@ -19,6 +19,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+        CheckBoxValidator.Visible = false;
         if (val1)
         {
             EMailID.Enabled = false;
@@ -94,6 +95,12 @@ public partial class Account_OrderFood : System.Web.UI.Page
 
     protected void OrderBtn_Click(object sender, EventArgs e)
     {
+        string tmpOrderData = OrderData.Value;
+        if (tmpOrderData.Equals("no data", StringComparison.OrdinalIgnoreCase))
+        {
+            CheckBoxValidator.Visible = true;
+            return;
+        }
         string eMail;
         if (val1)
         {
@@ -113,8 +120,8 @@ public partial class Account_OrderFood : System.Web.UI.Page
             eMail = EMailID.Text;
         }
         
-        string bookDetails = "";
-        string[] orderData = OrderData.Value.Split('~');
+        string bookDetails = "";        
+        string[] orderData = tmpOrderData.Split('~');
         
         string insertParkingcmd = "insert into srajagop.foodreserve values(?,?,?,?)";
         OleDbTransaction tran = null;
