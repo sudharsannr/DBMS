@@ -63,9 +63,16 @@ public partial class Account_Restaurants : System.Web.UI.Page
             if (tbl.Tables[0].Rows.Count == 0)
             {
                 NoResult.Visible = true;
+                TableReserve.Enabled = false;
+                FoodReserve.Enabled = false;
             }
             else
+            {
                 NoResult.Visible = false;
+                TableReserve.Enabled = true;
+                FoodReserve.Enabled = true;
+
+            }
             //RestaurantRepeater.DataSource = oReader;
             //RestaurantRepeater.DataBind();
             GridView1.DataSource = tbl.Tables[0];

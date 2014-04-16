@@ -6,12 +6,11 @@
     </div>
     <div class="row">
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
-            <h4>
-                <p class="text-danger">
-                    We're sorry. We don't have the details of Food Items available at the restaurant. Kindly contact the restaurant to obtain more information 
-                </p>
+            <h4 class="text-danger">                
+                    We're sorry. We don't have the details of Food Items available at the restaurant. Kindly contact the restaurant to obtain more information                 
             </h4>
         </div>
+    </div>
     <script src="Scripts/jquery-1.10.2.js"></script>
     <script src="Scripts/OrderFood.js"></script>    
     <div class="col-md-5" id="FoodTbl" runat="server">
