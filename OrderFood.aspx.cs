@@ -127,7 +127,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
         OleDbTransaction tran = null;
         conn.Open();      
 
-        bookDetails += "Food order summary:\n " + "Item\t\t\t\t\t\t\t\tPrice\n";
+        bookDetails += "Food order summary:~ " + "Item\t\t\t\t\t\t\t\tPrice~";
         if(orderData.Length > 0)
         {
             foreach(string dt in orderData)
@@ -138,7 +138,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
                 {
                     string[] t = dt.Split('|');
                     System.Diagnostics.Debug.WriteLine(t[0] + "--" + t[1]);
-                    bookDetails += t[0] + "\t\t\t\t\t\t" + t[1] + "\n";
+                    bookDetails += t[0] + "\t\t\t\t\t\t" + t[1] + "~";
                     //TODO: Can this be reused?
                     tran = conn.BeginTransaction();
                     OleDbCommand insert_foodreserve = new OleDbCommand(insertParkingcmd, conn, tran);
@@ -150,17 +150,15 @@ public partial class Account_OrderFood : System.Web.UI.Page
                     tran.Commit();
                 }
             }
-            bookDetails += "Total purchase amount: " + TotalPrice.Value + "\n";
+            bookDetails += "Total purchase amount: " + TotalPrice.Value + "~";
         }
         conn.Close();
 
-        string subject;
-        var content = "";
-        subject = "GourmetGuide food order confirmation";
-        content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + bookDetails + "\n\n"
+        /*string subject = "GourmetGuide food order confirmation";
+        var content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + bookDetails + "\n\n"
                   + "GourmetGuide team.";
         SendMail sm = new SendMail(eMail, null, subject, content);
-        sm.send();
-        Response.Redirect("/Account/Profile.aspx", true);
+        sm.send();*/
+        Response.Redirect("~/OrderConfirmation.aspx?orderdetails=" + bookDetails + "&email=" + eMail + "&registered=" + val1, true);
     }
 }
