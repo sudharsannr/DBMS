@@ -38,7 +38,7 @@
                 var myOptions = {
                     zoom: 70,
                     center: latlng,
-                    mapTypeId: google.maps.MapTypeId.SATELLITE
+                    mapTypeId: google.maps.MapTypeId.HYBRID
                 }
                 map = new google.maps.Map(document.getElementById("map"), myOptions);
                 var marker = new google.maps.Marker({
@@ -52,30 +52,41 @@
     </script>
     <div class="row">
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
-            <h4>
+            <h4> 
+
                 <p class="text-danger">
                     We're sorry. We don't have the details of Food Items available at the restaurant. Kindly contact the restaurant to obtain more information 
                 </p>
             </h4>
+
         </div>
         <div class="col-md-5">
             <p>
-                <asp:GridView ID="GridView1" runat="server" PageSize="25" AutoGenerateColumns="False" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">
-                    <Columns>
-                        <asp:BoundField DataField="NAME" HeaderText="Name" SortExpression="NAME" />
-                    </Columns>
-
+                <asp:GridView CssClass="GridViewStyle" ID="GridView1" runat="server" PageSize="25" AutoGenerateColumns="False" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="True" OnSorting="GridView1_Sorting" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" Width="100%" HorizontalAlign="Center">
+             
                     <Columns>
                         <asp:BoundField DataField="PRICE" HeaderText="PRICE" SortExpression="PRICE" />
+                        <asp:TemplateField HeaderText="Name" SortExpression="NAME">
+                            <EditItemTemplate>
+                                <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("NAME") %>'></asp:TextBox>
+                            </EditItemTemplate>
+                            <ItemTemplate>
+                                <asp:Label ID="Label1" runat="server" Text='<%# Bind("NAME") %>'></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
-                    <Columns>
-                        
-                    </Columns>
-
+                    <RowStyle CssClass="RowStyle" />
+    <EmptyDataRowStyle CssClass="EmptyRowStyle" />
+    <PagerStyle CssClass="PagerStyle" />
+    <SelectedRowStyle CssClass="SelectedRowStyle" />
+    <EditRowStyle CssClass="EditRowStyle" />
+    <AlternatingRowStyle CssClass="AltRowStyle" />
+    <SortedAscendingHeaderStyle CssClass="sortasc" />
+    <SortedDescendingHeaderStyle CssClass="sortdesc" />
                 </asp:GridView>
             </p>
         </div>
-        <div class="col-md-5" id="map" style="width: 675px; height: 654px;">
+        <div class="col-md-5" id="map" style="width: 500px; height: 500px;">
         </div>
     </div>
 
