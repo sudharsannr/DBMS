@@ -31,28 +31,22 @@
         /*
          * Call googleMaps api to show the location on Map
          */
-        function gMaps(location) {
-            var map = new google.maps.Map(document.getElementById('map'),
-                {
-                    mapTypeId: google.maps.MapTypeId.SATELLITE,
-                    zoom: 100
-                });
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode(
-                {
-                    'address': location
-                },
-                function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        new google.maps.Marker({
-                            position: results[0].geometry.location,
-                            map: map
-                        });
-                        map.setCenter(results[0].geometry.location);
-
-                    }
-                });
-        }
+        function gMaps(latitude,longitude) {
+                var latlng = new google.maps.LatLng(latitude, longitude);
+                var myOptions = {
+                    zoom: 80,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.HYBRID
+                }
+                map = new google.maps.Map(document.getElementById("map"), myOptions);
+                var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    title: 'Restaurant'
+                });         
+            
+            }
+        
     </script>
     <div class="row">
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
@@ -72,10 +66,6 @@
                     <Columns>
                         <asp:BoundField DataField="PRICE" HeaderText="PRICE" SortExpression="PRICE" />
                     </Columns>
-                    <Columns>
-                        
-                    </Columns>
-
                 </asp:GridView>
             </p>
         </div>
@@ -86,7 +76,6 @@
     <div class="row" style="align-content: center">
         <p>
             <asp:Button ID="TableReserve" Text="Table Reserve" OnClick="TableReserve_Click" runat="server" CssClass="btn btn-default" />
-            <asp:Button ID="FoodReserve" Text="Order food" OnClick="FoodReserve_Click" runat="server" CssClass="btn btn-default" />
         </p>
     </div>
 </asp:Content>
