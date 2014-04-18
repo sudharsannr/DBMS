@@ -21,6 +21,8 @@ public partial class Account_Restaurants : System.Web.UI.Page
     public String location;
     public string gUrl = "http://maps.googleapis.com/maps/api/js?key=" + ProjectSettings.googleMapsKey + "&sensor=false";
     public string holiday;
+    public string Lat;
+    public string lng;
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -38,7 +40,7 @@ public partial class Account_Restaurants : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS, PRIVATEDINING FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " + rid;
+            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS, PRIVATEDINING,LATITUDE,LONGITUDE FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " + rid;
             string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID =" + rid;
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
@@ -62,7 +64,8 @@ public partial class Account_Restaurants : System.Web.UI.Page
             workingHours = oReader[2].ToString() + " - " + oReader[3].ToString();
             string[] days = { "Working All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
             holiday = days[System.Convert.ToInt32(oReader[10].ToString())];
-            
+            Lat = oReader[12].ToString();
+            lng = oReader[13].ToString();
             OleDbCommand select_search = new OleDbCommand(cmd1, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
             oAdapter.Fill(tbl);
@@ -77,19 +80,21 @@ public partial class Account_Restaurants : System.Web.UI.Page
                 NoResult.Visible = false;
                 TableReserve.Enabled = true;
                 FoodReserve.Enabled = true;
+
             }
 
             if (String.Equals(oReader[11].ToString(), "Y", StringComparison.OrdinalIgnoreCase))
                 TableReserve.Enabled = true;
             else
                 TableReserve.Enabled = false;
+
             //RestaurantRepeater.DataSource = oReader;
             //RestaurantRepeater.DataBind();
             GridView1.DataSource = tbl.Tables[0];
             GridView1.DataBind();
             GridView1.PagerSettings.Mode = PagerButtons.Numeric;
             conn.Close();
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps('" + location + "')", true);
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps()", true);
         }
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
