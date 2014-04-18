@@ -8,6 +8,8 @@ using System.Data.OleDb;
 using System.Data;
 using System.Text;
 using GourmetGuide;
+using System.Drawing;
+using System.Collections;
 
 public partial class Account_Restaurants : System.Web.UI.Page
 {
@@ -23,13 +25,48 @@ public partial class Account_Restaurants : System.Web.UI.Page
     public string holiday;
     public string Lat;
     public string lng;
+    DataTable t;
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
             ViewState["sortOrder"] = "";
             bindGridView("", "");
+        }        
+    }
+    protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView1.DataSource = tbl.Tables[0];
+        GridView1.PageIndex = e.NewPageIndex;
+        GridView1.DataBind();
+    }
+    protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
+    {
+        GridView1.AutoGenerateColumns = false;
+        bindGridView(e.SortExpression, sortOrder);
+    }
+    public string sortOrder
+    {
+        get
+        {
+            if (ViewState["sortOrder"].ToString() == "desc")
+            {
+                ViewState["sortOrder"] = "asc";
+            }
+            else
+            {
+                ViewState["sortOrder"] = "desc";
+            }
+
+            return ViewState["sortOrder"].ToString();
         }
+        set
+        {
+            ViewState["sortOrder"] = value;
+        }
+    }
+    public void bindGridView(string sortExp, string sortDir)
+    {
         if (Request.QueryString["restaurant"] != null)
         {
             rid = Request.QueryString["restaurant"];
@@ -88,74 +125,20 @@ public partial class Account_Restaurants : System.Web.UI.Page
             else
                 TableReserve.Enabled = false;
 
-            //RestaurantRepeater.DataSource = oReader;
-            //RestaurantRepeater.DataBind();
-            GridView1.DataSource = tbl.Tables[0];
-            GridView1.DataBind();
-            GridView1.PagerSettings.Mode = PagerButtons.Numeric;
-            conn.Close();
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps()", true);
-        }
-    }
-    protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    {
-        GridView1.DataSource = tbl.Tables[0];
-        GridView1.PageIndex = e.NewPageIndex;
-        GridView1.DataBind();
-    }
-    protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
-    {
-        bindGridView(e.SortExpression, sortOrder);
-    }
-    public string sortOrder
-    {
-        get
-        {
-            if (ViewState["sortOrder"].ToString() == "desc")
-            {
-                ViewState["sortOrder"] = "asc";
-            }
-            else
-            {
-                ViewState["sortOrder"] = "desc";
-            }
-
-            return ViewState["sortOrder"].ToString();
-        }
-        set
-        {
-            ViewState["sortOrder"] = value;
-        }
-    }
-    public void bindGridView(string sortExp, string sortDir)
-    {
-        if (Request.QueryString["restaurant"] != null)
-        {
-            rid = Request.QueryString["restaurant"].ToUpper();
-            StringBuilder ConnectionString = new StringBuilder();
-            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
-                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
-                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
-                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
-                    .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd1 = "SELECT DISTINCT SRAJAGOP.FOOD.NAME, SRAJAGOP.FDPRICECATALOG.PRICE FROM SRAJAGOP.FOOD INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID INNER JOIN SRAJAGOP.RESTAURANT ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID WHERE SRAJAGOP.RESTAURANT.RESTAURANTID =" + rid;
-            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
-            conn.Open();
-            OleDbCommand select_search = new OleDbCommand(cmd1, conn);
-            OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
-            oAdapter.Fill(tbl);
             DataView myDataView = new DataView();
             myDataView = tbl.Tables[0].DefaultView;
             if (sortExp != string.Empty)
             {
                 myDataView.Sort = string.Format("{0} {1}", sortExp, sortDir);
             }
-
             GridView1.DataSource = myDataView;
-            GridView1.DataBind();
+            GridView1.DataBind(); 
+            
+            GridView1.PagerSettings.Mode = PagerButtons.Numeric;
             conn.Close();
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps()", true);
         }
-    }
+    }    
     protected void TableReserve_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/Reserve?restaurant=" + rid);
@@ -163,5 +146,5 @@ public partial class Account_Restaurants : System.Web.UI.Page
     protected void FoodReserve_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/OrderFood?restaurant=" + rid);
-    }
+    }  
 }
