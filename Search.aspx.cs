@@ -22,49 +22,6 @@ public partial class Search : System.Web.UI.Page
             ViewState["sortOrder"] = "";
             bindGridView("", "");
         }
-        if (Request.QueryString["SearchString"] != null)
-        {
-            string searchString = Request.QueryString["SearchString"].ToUpper();
-            StringBuilder ConnectionString = new StringBuilder();
-            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
-                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
-                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
-                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
-                    .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE UPPER(NAME) LIKE '%" + searchString + "%' OR UPPER(CITY) LIKE '%" + searchString + "%' OR UPPER(STATE) LIKE '%" + searchString + "%' OR UPPER(DESCRIPTION) LIKE '%" + searchString + "%' UNION SELECT DISTINCT ProjectSettings.schema.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, ProjectSettings.schema.RESTAURANT.RESTAURANTID FROM ProjectSettings.schema.RESTAURANT INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID INNER JOIN ProjectSettings.schema.FOOD ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID AND ProjectSettings.schema.FOOD.FOODID IN (SELECT ProjectSettings.schema.FOOD.FOODID FROM ProjectSettings.schema.FOOD WHERE (UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '% " + searchString + " %') OR (UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '% " + searchString + "') OR (UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '" + searchString + " %') OR (UPPER(ProjectSettings.schema.FOOD.NAME) = '" + searchString + "')))";
-            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
-            conn.Open();
-            OleDbCommand select_search = new OleDbCommand(cmd, conn);
-            OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
-            tbl.Clear();
-            oAdapter.Fill(tbl);
-            //RestaurantRepeater.DataSource = oReader;
-            //RestaurantRepeater.DataBind();
-            GridView1.DataSource = tbl.Tables[0];
-            GridView1.DataBind();
-            GridView1.PagerSettings.Mode = PagerButtons.Numeric;
-
-            foreach (GridViewRow gr in GridView1.Rows)
-            {
-                HyperLink hp = new HyperLink();
-                hp.Text = gr.Cells[0].Text;
-                rName = hp.Text;
-                rID = gr.Cells[9].Text;
-                rID = "~/Restaurants.aspx?restaurant=" + rID;
-                gr.Cells[0].Controls.Add(hp);
-            }
-            //System.Diagnostics.Debug.WriteLine("Query is " + cmd);
-            ////GridView1.DataSource = oReader;
-            ////GridView1.DataBind();
-            //str += @"<table>";
-            //while (oReader.Read())
-            //{
-            //    str += @"<tr><td><a href='Restaurants.aspx?restaurant=" + oReader[9].ToString() + "'>" + oReader[0].ToString() + @"</a></td><td>" + oReader[1].ToString() + @"</td> <td>" + oReader[2].ToString() + @"</td> <td>" + oReader[3].ToString() + @"</td> <td>" + oReader[4].ToString() + @"</td> <td>" + oReader[5].ToString() + @"</td> <td>" + oReader[6].ToString() + @"</td> <td>" + oReader[7].ToString() + @"</td> <td>" + oReader[8].ToString() + @"</tr>";
-            //}
-            //System.Diagnostics.Debug.WriteLine(str);
-            //str += "</table>";
-            conn.Close();
-        }
     }
 
     protected void Button1_Click(object sender, EventArgs e)
@@ -129,11 +86,12 @@ public partial class Search : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE UPPER(NAME) LIKE '%" + searchString + "%' OR UPPER(CITY) LIKE '%" + searchString + "%' OR UPPER(STATE) LIKE '%" + searchString + "%' UNION SELECT DISTINCT ProjectSettings.schema.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, ProjectSettings.schema.RESTAURANT.RESTAURANTID FROM ProjectSettings.schema.RESTAURANT INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID INNER JOIN ProjectSettings.schema.FOOD ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID AND UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '%" + searchString + "%')";
+            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE UPPER(NAME) LIKE '%" + searchString + "%' OR UPPER(CITY) LIKE '%" + searchString + "%' OR UPPER(STATE) LIKE '%" + searchString + "%' OR UPPER(DESCRIPTION) LIKE '%" + searchString + "%' UNION SELECT DISTINCT ProjectSettings.schema.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, ProjectSettings.schema.RESTAURANT.RESTAURANTID FROM ProjectSettings.schema.RESTAURANT INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID INNER JOIN ProjectSettings.schema.FOOD ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID AND ProjectSettings.schema.FOOD.FOODID IN (SELECT ProjectSettings.schema.FOOD.FOODID FROM ProjectSettings.schema.FOOD WHERE (UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '% " + searchString + " %') OR (UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '% " + searchString + "') OR (UPPER(ProjectSettings.schema.FOOD.NAME) LIKE '" + searchString + " %') OR (UPPER(ProjectSettings.schema.FOOD.NAME) = '" + searchString + "')))";
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand select_search = new OleDbCommand(cmd, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
+            tbl.Clear();
             oAdapter.Fill(tbl);
             DataView myDataView = new DataView();
             myDataView = tbl.Tables[0].DefaultView;
@@ -144,7 +102,18 @@ public partial class Search : System.Web.UI.Page
 
             GridView1.DataSource = myDataView;
             GridView1.DataBind();
+            GridView1.PagerSettings.Mode = PagerButtons.Numeric;
+
+            foreach (GridViewRow gr in GridView1.Rows)
+            {
+                HyperLink hp = new HyperLink();
+                hp.Text = gr.Cells[0].Text;
+                rName = hp.Text;
+                rID = gr.Cells[9].Text;
+                rID = "~/Restaurants.aspx?restaurant=" + rID;
+                gr.Cells[0].Controls.Add(hp);
+            }            
             conn.Close();
-        }
+        }        
     }
 }
