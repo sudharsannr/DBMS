@@ -10,6 +10,8 @@ function toggleFields(rowNum)
     else
     {
         //checkbox unchecked operations
+        $("#fd_qty_" + rowNum).val("");
+        calculateTotal(rowNum);
         $("#fd_qty_" + rowNum).attr('disabled', true);
         $("#fd_total_" + rowNum).text("");
     }
@@ -70,9 +72,4 @@ function gatherData()
         data = "no data";
     $("#MainContent_OrderData").val(data);
     $("#MainContent_TotalPrice").val($("#totalPrice").text());
-}
-
-function test()
-{
-    alert('hello');
 }

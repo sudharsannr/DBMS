@@ -127,7 +127,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
         OleDbTransaction tran = null;
         conn.Open();      
 
-        bookDetails += "Food order summary:~ " + "Item\t\t\t\t\t\t\t\tPrice~";
+        bookDetails += "Food order summary:~ " + String.Format("{0, -50} {1, 0}~", "Item", "Price");
         if(orderData.Length > 0)
         {
             foreach(string dt in orderData)
@@ -138,7 +138,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
                 {
                     string[] t = dt.Split('|');
                     System.Diagnostics.Debug.WriteLine(t[0] + "--" + t[1]);
-                    bookDetails += t[0] + "\t\t\t\t\t\t" + t[1] + "~";
+                    bookDetails += String.Format("{0, -50} {1, 0}~", t[0], t[1]);
                     //TODO: Can this be reused?
                     tran = conn.BeginTransaction();
                     OleDbCommand insert_foodreserve = new OleDbCommand(insertParkingcmd, conn, tran);
@@ -150,7 +150,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
                     tran.Commit();
                 }
             }
-            bookDetails += "Total purchase amount: " + TotalPrice.Value + "~";
+            bookDetails += String.Format("{0, -50} {1, 0}~", "Total purchase amount: ", TotalPrice.Value);
         }
         conn.Close();
 
