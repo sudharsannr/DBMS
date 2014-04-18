@@ -131,26 +131,20 @@ public partial class AdvancedSearch : System.Web.UI.Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         string searchString = "GA";
-        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE UPPER(NAME) LIKE " + namesearchString + " AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP LIKE " +zipsearchString+ " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString + " INTERSECT SELECT DISTINCT ProjectSettings.schema.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, ProjectSettings.schema.RESTAURANT.RESTAURANTID FROM ProjectSettings.schema.RESTAURANT INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID INNER JOIN ProjectSettings.schema.FOOD ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID AND UPPER(ProjectSettings.schema.FOOD.NAME) LIKE " + foodsearchString + ")";
+        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM ProjectSettings.schema.RESTAURANT WHERE UPPER(NAME) LIKE " + namesearchString + " AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP = " +zipsearchString+ " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString + " INTERSECT SELECT DISTINCT ProjectSettings.schema.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, ProjectSettings.schema.RESTAURANT.RESTAURANTID FROM ProjectSettings.schema.RESTAURANT INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID INNER JOIN ProjectSettings.schema.FOOD ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID AND UPPER(ProjectSettings.schema.FOOD.NAME) LIKE " + foodsearchString + ")";
         System.Diagnostics.Debug.Write("Here Qery " + cmd);
         
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_search = new OleDbCommand(cmd, conn);
         OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
-        tbl.Clear();
         oAdapter.Fill(tbl);
         //RestaurantRepeater.DataSource = oReader;
         //RestaurantRepeater.DataBind();
         GridView2.DataSource = tbl.Tables[0];
         GridView2.DataBind();
         GridView2.PagerSettings.Mode = PagerButtons.Numeric;
-        if (tbl.Tables[0].Rows.Count == 0)
-        {
-            NoResult.Visible = true;
-        }
-        else
-            NoResult.Visible = false;
+
         foreach (GridViewRow gr in GridView2.Rows)
         {
             HyperLink hp = new HyperLink();
