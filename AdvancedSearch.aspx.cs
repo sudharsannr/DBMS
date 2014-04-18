@@ -181,9 +181,8 @@ public partial class AdvancedSearch : System.Web.UI.Page
     //}
     protected void GridView2_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        GridView2.DataSource = tbl.Tables[0];
+        bindGridView("", "");
         GridView2.PageIndex = e.NewPageIndex;
-        GridView2.DataBind();
     }
     protected void GridView2_Sorting(object sender, GridViewSortEventArgs e)
     {
