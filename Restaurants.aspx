@@ -76,6 +76,7 @@
     <div class="row" style="align-content: center">
         <p>
             <asp:Button ID="TableReserve" Text="Table Reserve" OnClick="TableReserve_Click" runat="server" CssClass="btn btn-default" />
+            <asp:Button ID="FoodReserve" Text="Order food" OnClick="FoodReserve_Click" runat="server" CssClass="btn btn-default" />
         </p>
     </div>
 </asp:Content>
