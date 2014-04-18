@@ -131,26 +131,20 @@ public partial class AdvancedSearch : System.Web.UI.Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         string searchString = "GA";
-        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE " + namesearchString + " AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP LIKE " +zipsearchString+ " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString + " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString + ")";
+        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE " + namesearchString + " AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP = " +zipsearchString+ " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString + " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString + ")";
         System.Diagnostics.Debug.Write("Here Qery " + cmd);
         
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_search = new OleDbCommand(cmd, conn);
         OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
-        tbl.Clear();
         oAdapter.Fill(tbl);
         //RestaurantRepeater.DataSource = oReader;
         //RestaurantRepeater.DataBind();
         GridView2.DataSource = tbl.Tables[0];
         GridView2.DataBind();
         GridView2.PagerSettings.Mode = PagerButtons.Numeric;
-        if (tbl.Tables[0].Rows.Count == 0)
-        {
-            NoResult.Visible = true;
-        }
-        else
-            NoResult.Visible = false;
+
         foreach (GridViewRow gr in GridView2.Rows)
         {
             HyperLink hp = new HyperLink();
