@@ -13,8 +13,9 @@
 
     <div class="row">
         <div class="col-md-4">
-            <p>
-                A confirmation code has been sent to your E-Mail. Please enter that here</p>
+            <label id="ConfMsg" runat="server">
+                A confirmation code has been sent to your E-Mail. Please enter that here
+            </label>
                   
             <%--Search--%>
             <div class="form-group">
