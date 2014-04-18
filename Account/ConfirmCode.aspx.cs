@@ -15,7 +15,9 @@ public partial class Account_ConfirmCodeaspx : System.Web.UI.Page
     string Text = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        if (Request.QueryString["url"] != null)
+            ConfMsg.InnerText = "Please enter the confirmation code which was already mailed to you.";
+            
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
