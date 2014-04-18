@@ -31,19 +31,21 @@
         /*
          * Call googleMaps api to show the location on Map
          */
-        function gMaps(latitude,longitude) {
-                var latlng = new google.maps.LatLng(latitude, longitude);
+        function gMaps() {
+            var Lat = '<% =Lat%>';
+            var lng = '<% =lng%>';
+            var latlng = new google.maps.LatLng(Lat, lng);
                 var myOptions = {
-                    zoom: 80,
+                    zoom: 70,
                     center: latlng,
-                    mapTypeId: google.maps.MapTypeId.HYBRID
+                    mapTypeId: google.maps.MapTypeId.SATELLITE
                 }
                 map = new google.maps.Map(document.getElementById("map"), myOptions);
                 var marker = new google.maps.Marker({
                     position: latlng,
                     map: map,
                     title: 'Restaurant'
-                });         
+                });        
             
             }
         
@@ -66,6 +68,10 @@
                     <Columns>
                         <asp:BoundField DataField="PRICE" HeaderText="PRICE" SortExpression="PRICE" />
                     </Columns>
+                    <Columns>
+                        
+                    </Columns>
+
                 </asp:GridView>
             </p>
         </div>
