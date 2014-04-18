@@ -36,9 +36,8 @@ public partial class Account_Restaurants : System.Web.UI.Page
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        GridView1.DataSource = tbl.Tables[0];
-        GridView1.PageIndex = e.NewPageIndex;
-        GridView1.DataBind();
+        bindGridView("", "");
+        GridView1.PageIndex = e.NewPageIndex;        
     }
     protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
     {
