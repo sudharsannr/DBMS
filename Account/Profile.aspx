@@ -6,44 +6,56 @@
         <h1>Gourmet Guide</h1>
         <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
     </div>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            panelLoad();
+            $('#recentSrch').on('click', function (event) {
+                $('#recentSrchResult').toggle('show');
+            });
+            $('#freqSrch').on('click', function (event) {
+                $('#freqSrchResult').toggle('show');
+            });
+        });
+
+        function panelLoad() {
+            console.log("Inside panelLoad ");
+            $("#recentSrchResult").hide();
+            $("#freqSrchResult").hide();
+        }
+    </script>
     <div class="row">
         <div class="col-md-10">
             <h2>
                 Welcome to your Profile Page!!
             </h2>
-            <p>
-                Your Recent 5 searches
-            </p>
-            <p>
+            <div id="recentSrch">
+                <p>
+                    Your Recent 5 searches
+                </p>
+            </div>
+            <div id="recentSrchResult">
                 <asp:Repeater ID="RecentSearchRepeater" runat="server">
-                    <HeaderTemplate>
-                        <p>
-                            Search Term
-                        </p>
-                    </HeaderTemplate>
                     <ItemTemplate>
                         <asp:LinkButton runat="server" AutoPostBack="false" ID="SearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SearchTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
-            </p>
+            </div>
         </div>
         
         <div class="col-md-10">
-            <p>
-                Your most frequent searches
-            </p>
-            <p>
+            <div id="freqSrch">
+                <p>
+                    Your most frequent searches
+                </p>
+            </div>
+            <div id="freqSrchResult">
                 <asp:Repeater ID="FrequentSearchRepeater" runat="server">
-                    <HeaderTemplate>
-                        <p>
-                            Search Term
-                        </p>
-                    </HeaderTemplate>
                     <ItemTemplate>
                         <asp:LinkButton runat="server" AutoPostBack="false" ID="FrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="FrequentSearchTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
-            </p>
+            </div>
         </div>
 
         <div class="col-md-10">
