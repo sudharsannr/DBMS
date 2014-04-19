@@ -14,10 +14,14 @@ using System.Collections;
 public partial class Account_Restaurants : System.Web.UI.Page
 {
     DataSet tbl = new DataSet();
+    DataSet tbl2 = new DataSet();
     public string str;
     public string cuisine;
     public string rName;
+    public string tName;
     public string rid;
+    public string tour;
+    public string dist;
     public string addressStr;
     public string workingHours;
     public String location;
@@ -25,6 +29,10 @@ public partial class Account_Restaurants : System.Web.UI.Page
     public string holiday;
     public string Lat;
     public string lng;
+    public float latr;
+    public float longr;
+    public float latt;
+    public float longt;
     DataTable t;
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -78,13 +86,22 @@ public partial class Account_Restaurants : System.Web.UI.Page
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
             string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS, PRIVATEDINING,LATITUDE,LONGITUDE FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " + rid;
             string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID =" + rid;
+            //string cmd2 = "select name, latitude, longitude from srajagop.location, (select touristid as ti from srajagop.nearby where restaurantid ="+rid+") where touristid=ti";
+            string cmd2 = "select name, round(distance,3) as Distance from srajagop.location,(select restaurantid,touristid as ti,2*6373*ASIN(sqrt((sin((0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2))*(sin(0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2)))+(cos(0.017453293*(srajagop.location.latitude))*cos(0.017453293*(srajagop.restaurant.latitude))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))))) as distance from ProjectSettings.schema.RESTAURANT, srajagop.location where restaurantid ="+ rid +" order by distance) where touristid = ti and rownum<=10";
+            System.Diagnostics.Debug.WriteLine("Quer y is " + cmd2);
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
-            OleDbCommand name = new OleDbCommand(cmd, conn);
-            OleDbDataReader oReader = name.ExecuteReader();
+            OleDbCommand name1 = new OleDbCommand(cmd, conn);
+            OleDbDataReader oReader = name1.ExecuteReader();
+            OleDbCommand name2 = new OleDbCommand(cmd2, conn);
+            OleDbDataReader oReader2 = name2.ExecuteReader();
+            
             oReader.Read();
+            oReader2.Read();
             rName = oReader[0].ToString();
             cuisine = oReader[1].ToString();
+            tName = oReader2[0].ToString();
+         //   latr = Lat.to
             cuisine = cuisine.Replace("restaurant", "");
             location = "";
             for (int i = 4; i < 9; i++)
@@ -134,6 +151,15 @@ public partial class Account_Restaurants : System.Web.UI.Page
             GridView1.DataBind(); 
             
             GridView1.PagerSettings.Mode = PagerButtons.Numeric;
+            OleDbCommand name3 = new OleDbCommand(cmd2, conn);
+            OleDbDataAdapter oAdapter2 = new OleDbDataAdapter(name3);
+            oAdapter2.Fill(tbl2);
+            DataView myDataView2 = new DataView();
+            myDataView2 = tbl2.Tables[0].DefaultView;
+            GridView2.DataSource = myDataView2;
+            GridView2.DataBind(); 
+            
+                                
             conn.Close();
             Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps()", true);
         }
