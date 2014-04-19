@@ -12,10 +12,40 @@
                 Welcome to your Profile Page!!
             </h2>
             <p>
-                <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+                Your Recent 5 searches
+            </p>
+            <p>
+                <asp:Repeater ID="RecentSearchRepeater" runat="server">
+                    <HeaderTemplate>
+                        <p>
+                            Search Term
+                        </p>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" AutoPostBack="false" ID="SearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SearchTerm_Click" CausesValidation="false"/>
+                    </ItemTemplate>
+                </asp:Repeater>
             </p>
         </div>
         
+        <div class="col-md-10">
+            <p>
+                Your most frequent searches
+            </p>
+            <p>
+                <asp:Repeater ID="FrequentSearchRepeater" runat="server">
+                    <HeaderTemplate>
+                        <p>
+                            Search Term
+                        </p>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" AutoPostBack="false" ID="FrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="FrequentSearchTerm_Click" CausesValidation="false"/>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </p>
+        </div>
+
         <div class="col-md-10">
             <h2>Hungry? Why wait? Search for your restaurant here</h2>
             <p>
@@ -25,7 +55,7 @@
             <div class="form-group">
                 <div class="col-md-10">
                 <asp:TextBox runat="server" ID="Search" CssClass="form-control" />
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="Search"
+                <asp:RequiredFieldValidator ID="rfvSearch" runat="server" ControlToValidate="Search"
                     CssClass="text-danger" ErrorMessage="Please enter a search criteria for better results" />
                 </div>
             </div>
