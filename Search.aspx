@@ -15,23 +15,17 @@
                   
             <%--Search--%>
             <div class="form-group">
-                <div class="col-md-10">
-                <p><asp:TextBox runat="server" ID="SearchTextBox" CssClass="form-control" /></p>
-                </div>
+                    <p><asp:TextBox runat="server" ID="SearchTextBox" CssClass="form-control" Width="32%" /></p> 
                 
             </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    <p><asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" />
-                        <asp:Button ID="Button2" runat="server" Text="Advanced Search" CssClass="btn btn-default" OnClick="Button2_Click" /></p> 
-                </div>
-            </div>
    </div>
+    <asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" />
+                        <asp:Button ID="Button2" runat="server" Text="Advanced Search" CssClass="btn btn-default" OnClick="Button2_Click" />
     <br />
     <br />
     <div class="row" style="align-content:center">
         <p>
-        <asp:GridView ID="GridView1" runat="server" autogeneratecolumns="False" PageSize="25" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">
+        <asp:GridView CssClass="GridViewStyle" ID="GridView1" runat="server" autogeneratecolumns="False" PageSize="25" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">
             <Columns>
                 <asp:HyperLinkField DataTextField="NAME" HeaderText="Restaurant Name" DataNavigateUrlFields="RESTAURANTID" 
                     DataNavigateUrlFormatString="Restaurants.aspx?restaurant={0}" Text="NAME" SortExpression="NAME"/>
@@ -71,6 +65,14 @@
             <Columns>
                 <asp:BoundField Visible="false" DataField="RestaurantID" HeaderText="Restaurant ID" /> 
             </Columns>
+            <RowStyle CssClass="RowStyle" />
+            <EmptyDataRowStyle CssClass="EmptyRowStyle" />
+            <PagerStyle CssClass="PagerStyle" />
+            <SelectedRowStyle CssClass="SelectedRowStyle" />
+            <EditRowStyle CssClass="EditRowStyle" />
+            <AlternatingRowStyle CssClass="AltRowStyle" />
+            <SortedAscendingHeaderStyle CssClass="sortasc" />
+            <SortedDescendingHeaderStyle CssClass="sortdesc" />
         </asp:GridView>
             </p> 
     </div>
