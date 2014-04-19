@@ -162,7 +162,7 @@ button,
 input,
 select,
 textarea {
-  margin: 0 8px 0 0px;
+  margin: 0;
   font-family: inherit;
   font-size: 100%;
 }
@@ -862,8 +862,6 @@ pre code {
   padding-left: 15px;
     top: -6px;
     left: 4px;
-    width: 275px;
-    height: 222px;
 }
 
 .col-xs-1,
@@ -1411,7 +1409,6 @@ pre code {
 table {
   max-width: 100%;
   background-color: transparent;
-    width: 373px;
 }
 
 th {
@@ -1735,7 +1732,6 @@ input[type="number"]::-webkit-inner-spin-button {
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
           transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-    width: 146px;
 }
 
 .form-control:focus {
