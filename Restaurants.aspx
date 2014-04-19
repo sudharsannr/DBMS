@@ -23,6 +23,10 @@
         <h4>
             <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Restaurant Holidays : </b></asp:TableCell><%=holiday %>
         </h4>
+        <h4>
+            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Restaurant Address : </b></asp:TableCell><%=tName %>
+        </h4>
+        
     </div>
     <script src="Scripts/jquery-1.10.2.js"></script>
     <script src='<%=gUrl%>'>
@@ -50,6 +54,9 @@
             }
         
     </script>
+    <!-- Tourist spots-->
+     <div class="right-col">
+            
     <div class="row">
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
             <h4> 
@@ -65,7 +72,6 @@
                 <asp:GridView CssClass="GridViewStyle" ID="GridView1" runat="server" PageSize="25" AutoGenerateColumns="False" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="True" OnSorting="GridView1_Sorting" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" Width="100%" HorizontalAlign="Center">
              
                     <Columns>
-                        <asp:BoundField DataField="PRICE" HeaderText="PRICE" SortExpression="PRICE" />
                         <asp:TemplateField HeaderText="Name" SortExpression="NAME">
                             <EditItemTemplate>
                                 <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("NAME") %>'></asp:TextBox>
@@ -74,6 +80,8 @@
                                 <asp:Label ID="Label1" runat="server" Text='<%# Bind("NAME") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
+                        <asp:BoundField DataField="PRICE" HeaderText="PRICE" SortExpression="PRICE" />
+                        
                     </Columns>
                     <RowStyle CssClass="RowStyle" />
     <EmptyDataRowStyle CssClass="EmptyRowStyle" />
@@ -86,8 +94,31 @@
                 </asp:GridView>
             </p>
         </div>
-        <div class="col-md-5" id="map" style="width: 500px; height: 500px;">
+        <div class="col-md-5">
+        <div class="row-md-5" id="map" style="width: 500px; height: 500px;">
         </div>
+        <div class ="row-md-5">
+            <p>"you are my darling"
+                <asp:GridView CssClass="GridViewStyle" ID="GridView2" runat="server" PageSize="25" AutoGenerateColumns="False" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" Width="100%" HorizontalAlign="Center">
+                        <Columns>
+                        <asp:BoundField DataField="Name" HeaderText="NAME" />
+                        <asp:BoundField DataField="Distance" HeaderText="Distance" />
+                        
+                    </Columns>
+                    <RowStyle CssClass="RowStyle" />
+    <EmptyDataRowStyle CssClass="EmptyRowStyle" />
+    <PagerStyle CssClass="PagerStyle" />
+    <SelectedRowStyle CssClass="SelectedRowStyle" />
+    <EditRowStyle CssClass="EditRowStyle" />
+    <AlternatingRowStyle CssClass="AltRowStyle" />
+    <SortedAscendingHeaderStyle CssClass="sortasc" />
+    <SortedDescendingHeaderStyle CssClass="sortdesc" />
+                </asp:GridView>
+            </p>
+            </p>
+        </div>
+        </div> 
+        
     </div>
 
     <div class="row" style="align-content: center">
