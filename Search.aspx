@@ -43,6 +43,7 @@
                     //advanced display
                     $("#MainContent_searchDiv").slideUp();
                     $("#MainContent_AdvSrchPanel").slideDown();
+                    $("#MainContent_srchHidden").val('advanced');
                     toggle = true;
                 }
                 else {
@@ -50,6 +51,7 @@
                     console.log('show simple');
                     $("#MainContent_AdvSrchPanel").slideUp();
                     $("#MainContent_searchDiv").slideDown();
+                    $("#MainContent_srchHidden").val('simple');
                     toggle = false;
                 }
             }
@@ -58,6 +60,7 @@
                 console.log('show simple');
                 $("#MainContent_AdvSrchPanel").slideUp();
                 $("#MainContent_searchDiv").slideDown();
+                $("#MainContent_srchHidden").val('simple');
                 toggle = false;
             }
         }
