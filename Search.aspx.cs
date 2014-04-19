@@ -189,9 +189,10 @@ public partial class Search : System.Web.UI.Page
     //}
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
+        GridView1.PageIndex = e.NewPageIndex;     
         System.Diagnostics.Debug.WriteLine("page index changed " + e.NewPageIndex);
         bindGridView("", "");
-        GridView1.PageIndex = e.NewPageIndex;        
+           
     }
     protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
     {
@@ -297,8 +298,11 @@ public partial class Search : System.Web.UI.Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         //string searchString = "GA";
-        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE " + namesearchString + " AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP = " + zipsearchString + " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString + " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString + ")";
-        System.Diagnostics.Debug.Write("Query " + cmd);
+        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE " + namesearchString + " AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP LIKE " + zipsearchString + " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString;
+        if (foodsearchString != "UPPER(FOOD.NAME)")
+        cmd += " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString;
+        cmd += ")";
+        System.Diagnostics.Debug.WriteLine("Query " + cmd);
 
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
