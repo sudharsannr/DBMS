@@ -13,19 +13,43 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
 {
     string str_eMail = "";
     string str_bookDetails = "";
+    string str_orderType = "";
+    string str_registered = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        str_eMail = Request.QueryString["email"];
+        if (Session["eMail"] != null)
+        {
+            str_eMail = Session["eMail"].ToString();
+            System.Diagnostics.Debug.WriteLine("Email: " + str_eMail);
+           // Session.Remove("eMail");
+        }
+        if (Session["type"] != null)
+        {
+            str_orderType = Session["type"].ToString();
+            System.Diagnostics.Debug.WriteLine("Type: " + str_orderType);
+            Session.Remove("type");
+        }
         System.Diagnostics.Debug.WriteLine("eMail : " + str_eMail);
-        str_bookDetails = Request.QueryString["orderDetails"];
-        string str_registered = Request.QueryString["registered"];
-        str_bookDetails = str_bookDetails.Replace("~", System.Environment.NewLine);
-        System.Diagnostics.Debug.WriteLine("bookDetails : " + str_bookDetails);
-        bookDetails.Text = str_bookDetails;
+        if (Session["bookDetails"] != null)
+        {
+            str_bookDetails = Session["bookDetails"].ToString();
+            str_bookDetails = str_bookDetails.Replace("~", System.Environment.NewLine);
+            bookDetails.Text = str_bookDetails;
+            System.Diagnostics.Debug.WriteLine("BookDetails: " + str_bookDetails);
+            //Session.Remove("bookDetails");
+        }
+        if (Session["registered"] != null)
+        {
+            str_registered = Session["registered"].ToString();
+            System.Diagnostics.Debug.WriteLine("Registered: " + str_registered);
+            Session.Remove("registered");
+        }
+        System.Diagnostics.Debug.WriteLine("Registered" + str_registered);
         if (string.Equals(str_registered, "true", StringComparison.OrdinalIgnoreCase)) 
         {
             fetchAddress();
         }
+        
     }
 
     private void fetchAddress()
@@ -57,10 +81,26 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
 
     protected void ConfirmBtn_Click(object sender, EventArgs e)
     {
-        string subject = "GourmetGuide food order confirmation";
-        var content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + str_bookDetails + "\n\n"
-                  + "GourmetGuide team.";
-        SendMail sm = new SendMail(str_eMail, null, subject, content);
+        string subject = "";
+        var content = "";
+        str_bookDetails = Session["bookDetails"].ToString();
+        str_bookDetails = str_bookDetails.Replace("~", System.Environment.NewLine);
+        if (String.Equals(str_orderType, "food", StringComparison.OrdinalIgnoreCase))
+        {
+            subject = "GourmetGuide food order confirmation";
+            content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + str_bookDetails + "\n\n"
+                      + "GourmetGuide team.";
+        }
+        else
+        {
+            subject = "GourmetGuide reservation confirmation";
+            content = "Hi. \n\nHere are the details for your reservation done a few minutes ago:\n\n" + str_bookDetails + "\n\n"
+                      + "GourmetGuide team.";
+        }
+        System.Diagnostics.Debug.WriteLine("Final email: " + Session["eMail"]);
+        SendMail sm = new SendMail(Session["eMail"].ToString(), null, subject, content);
+        Session.Remove("bookDetails");
+        Session.Remove("eMail");
         sm.send();
         Response.Redirect("/Account/Profile.aspx");
     }

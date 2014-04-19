@@ -53,7 +53,8 @@ public partial class Search : System.Web.UI.Page
             OleDbParameter param = new OleDbParameter();
             OleDbCommand insert_search = new OleDbCommand(cmd, conn, tran);
             insert_search.Parameters.Add("?", OleDbType.VarChar).Value = System.Web.HttpContext.Current.User.Identity.Name;
-            insert_search.Parameters.Add("?", OleDbType.VarChar).Value = Search.Text.ToUpper();
+            //insert_search.Parameters.Add("?", OleDbType.VarChar).Value = Search.Text.ToUpper();
+            insert_search.Parameters.Add("?", OleDbType.VarChar).Value = SearchTextBox.Text.ToUpper();
             insert_search.ExecuteNonQuery();
             tran.Commit();
 

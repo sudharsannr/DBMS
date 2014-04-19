@@ -1,9 +1,11 @@
 ﻿using GourmetGuide;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -132,7 +134,6 @@ public partial class Account_OrderFood : System.Web.UI.Page
         {
             foreach(string dt in orderData)
             {
-                System.Diagnostics.Debug.WriteLine(dt + "??" + orderData.Length);
                 //TODO: Rewrite in other format. Bad std.
                 if(dt.Length > 0)
                 {
@@ -159,6 +160,11 @@ public partial class Account_OrderFood : System.Web.UI.Page
                   + "GourmetGuide team.";
         SendMail sm = new SendMail(eMail, null, subject, content);
         sm.send();*/
-        Response.Redirect("~/OrderConfirmation.aspx?orderdetails=" + bookDetails + "&email=" + eMail + "&registered=" + val1, true);
+        //string enCryptString = Crypto.EncryptStringAES(bookDetails, ProjectSettings.cryptoKey);
+        Session["bookDetails"] = bookDetails;
+        Session["eMail"] = eMail;
+        Session["registered"] = val1.ToString();
+        Session["type"] = "food";
+        Response.Redirect("~/OrderConfirmation.aspx", true);
     }
 }

@@ -42,7 +42,7 @@ public partial class Account_Default : System.Web.UI.Page
         closetime = closetime.Replace(":", "");
         int ctime = System.Convert.ToInt32(closetime);
         DropDownList5.Items.Clear();
-        if (dayofweek == nwdays)
+        if (dayofweek == nwdays % 7)
         {
             DropDownList5.Items.Add(new ListItem("Restaurant Holiday", "Restaurant Holiday", true));
             DropDownList5.Enabled = false;
@@ -230,7 +230,6 @@ public partial class Account_Default : System.Web.UI.Page
             //ddValidator4.Enabled = false;
 
             if (CheckBox1.Checked)
-
                 val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
             if (val1)
             {
@@ -388,7 +387,7 @@ public partial class Account_Default : System.Web.UI.Page
 
         //int[] AvailabilityCount={Int32.Parse(DropDownList1.SelectedValue),Int32.Parse(DropDownList2.SelectedValue),Int32.Parse(DropDownList3.SelectedValue),Int32.Parse(DropDownList4.SelectedValue)};
         int avlCnt = 0;
-        bookDetails += "Restaurant: " + name + "\n";
+        bookDetails += "Restaurant: " + name + "~";
         for (int i = 0; i < 4; i++)
         {
             avlCnt = 0;
@@ -424,7 +423,7 @@ public partial class Account_Default : System.Web.UI.Page
                 tran.Commit();
 
                 bookDetails += "Table for " + groupID + " totaling for " + (groupID * avlCnt) + " persons"
-                             + " on " + datepicker.Text + " at " + DropDownList5.SelectedValue + ".\n";
+                             + " on " + datepicker.Text + " at " + DropDownList5.SelectedValue + ".~";
                 conn.Close();
             }
         
@@ -456,18 +455,26 @@ public partial class Account_Default : System.Web.UI.Page
                 bookDetails += " slot";
             else
                 bookDetails += " slots";
-            bookDetails += ".\n\n";
+            bookDetails += ".~~";
         }
 
-        string subject;
+        /*string subject;
         var content = "";
         subject = "GourmetGuide reservation confirmation";
         content = "Hi. \n\nHere are the details for your reservation done a few minutes ago:\n\n" + bookDetails + "\n\n"
                   + "GourmetGuide team.";
         SendMail sm = new SendMail(eMail, null, subject, content);
         sm.send();
-        Response.Redirect("/Account/Profile.aspx", true);
+         */
+        //Response.Redirect("/Account/Profile.aspx", true);
+        string query = "orderdetails=" + bookDetails + "&email=" + eMail + "&registered=" + val1 + "&type=table";
+        Session["bookDetails"] = bookDetails;
+        Session["eMail"] = eMail;
+        Session["registered"] = val1.ToString();
+        Session["type"] = "table";
+        Response.Redirect("~/OrderConfirmation.aspx", true);
     }
+
     protected void CheckParking_CheckedChanged(object sender, EventArgs e)
     {
         if (CheckParking.Checked)
