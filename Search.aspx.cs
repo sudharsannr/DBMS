@@ -14,9 +14,12 @@ public partial class Search : System.Web.UI.Page
     public string str = "";
     public string rID = "";
     public string rName = "";
+    public string userName = "";
     DataSet tbl = new DataSet();
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+            userName = System.Web.HttpContext.Current.User.Identity.Name;
         if (!IsPostBack)
         {
             ViewState["sortOrder"] = "";
@@ -26,7 +29,39 @@ public partial class Search : System.Web.UI.Page
 
     protected void Button1_Click(object sender, EventArgs e)
     {
+        if (userName != "")
+            insert_userSearch();
         Response.Redirect("Search.aspx?SearchString=" + SearchTextBox.Text);
+    }
+
+    private void insert_userSearch()
+    {
+        StringBuilder ConnectionString = new StringBuilder();
+        ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                .Append("USER ID=").Append(ProjectSettings.dbUser);
+        string cmd = "insert into srajagop.userSearch values(?,?,CURRENT_TIMESTAMP)";
+        OleDbTransaction tran = null;
+        OleDbConnection conn = null;
+        try
+        {
+            conn = new OleDbConnection(ConnectionString.ToString());
+            conn.Open();
+            tran = conn.BeginTransaction();
+            OleDbParameter param = new OleDbParameter();
+            OleDbCommand insert_search = new OleDbCommand(cmd, conn, tran);
+            insert_search.Parameters.Add("?", OleDbType.VarChar).Value = System.Web.HttpContext.Current.User.Identity.Name;
+            insert_search.Parameters.Add("?", OleDbType.VarChar).Value = Search.Text.ToUpper();
+            insert_search.ExecuteNonQuery();
+            tran.Commit();
+
+        }
+        finally
+        {
+            conn.Close();
+        }
     }
     protected void Button2_Click(object sender, EventArgs e)
     {
