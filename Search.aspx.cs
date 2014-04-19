@@ -88,43 +88,43 @@ public partial class Search : System.Web.UI.Page
         if (NameSearch.Text.Trim().Length == 0)
             namesearchString = "UPPER(NAME)";
         else
-            namesearchString = "\'%" + NameSearch.Text.ToString().ToUpper() + "%\'";
+            namesearchString = HttpUtility.UrlEncode("\'%" + NameSearch.Text.ToString().ToUpper() + "%\'");
 
         if (CuisineSearch.Text.Trim().Length == 0)
             cuisinesearchString = "UPPER(DESCRIPTION)";
         else
-            cuisinesearchString = "\'%" + CuisineSearch.Text.ToString().ToUpper() + "%\'";
+            cuisinesearchString = HttpUtility.UrlEncode("\'%" + CuisineSearch.Text.ToString().ToUpper() + "%\'");
 
 
         if (OpenTimeSearch.Text.Trim().Length == 0)
             openTimesearchString = "UPPER(OPENTIME)";
         else
-            openTimesearchString = "\'%" + OpenTimeSearch.Text.ToString().ToUpper() + "%\'";
+            openTimesearchString = HttpUtility.UrlEncode("\'%" + OpenTimeSearch.Text.ToString().ToUpper() + "%\'");
 
         if (CloseTimeSearch.Text.Trim().Length == 0)
             closeTimesearchString = "UPPER(CLOSETIME)";
         else
-            closeTimesearchString = "\'%" + CloseTimeSearch.Text.ToString().ToUpper() + "%\'";
+            closeTimesearchString = HttpUtility.UrlEncode("\'%" + CloseTimeSearch.Text.ToString().ToUpper() + "%\'");
 
         if (CitrySearch.Text.Trim().Length == 0)
             citysearchString = "UPPER(CITY)";
         else
-            citysearchString = "\'%" + CitrySearch.Text.ToString().ToUpper() + "%\'";
+            citysearchString = HttpUtility.UrlEncode("\'%" + CitrySearch.Text.ToString().ToUpper() + "%\'");
 
         if (ZipSearch.Text.Trim().Length == 0)
             zipsearchString = "ZIP";
         else
-            zipsearchString = "\'%" + ZipSearch.Text.ToString().ToUpper() + "%\'";
+            zipsearchString = HttpUtility.UrlEncode("\'%" + ZipSearch.Text.ToString().ToUpper() + "%\'");
 
         if (StateSearch.Text.Trim().Length == 0)
             statesearchString = "UPPER(STATE)";
         else
-            statesearchString = "\'%" + StateSearch.Text.ToString().ToUpper() + "%\'";
+            statesearchString = HttpUtility.UrlEncode("\'%" + StateSearch.Text.ToString().ToUpper() + "%\'");
 
         if (FoodSearch.Text.Trim().Length == 0)
             foodsearchString = "UPPER(FOOD.NAME)";
         else
-            foodsearchString = "\'%" + FoodSearch.Text.ToString().ToUpper() + "%\'";
+            foodsearchString = HttpUtility.UrlEncode("\'%" + FoodSearch.Text.ToString().ToUpper() + "%\'");
 
         StringBuilder sb = new StringBuilder()
                             .Append("restaurant=").Append(namesearchString).Append("&")
