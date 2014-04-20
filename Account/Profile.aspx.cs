@@ -15,7 +15,11 @@ public partial class Account_Default : System.Web.UI.Page
     public string city;
     protected void Page_Load(object sender, EventArgs e)
     {
+
         Page.Title = System.Web.HttpContext.Current.User.Identity.Name + "'s Profile Page";
+
+        if (!System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+            Response.Redirect("~/HomePage.aspx");
         recentlysearched();
         frequentlysearched();
         samelocfrequentlysearched();
