@@ -40,6 +40,23 @@ public partial class Account_Restaurants : System.Web.UI.Page
         {
             ViewState["sortOrder"] = "";
             bindGridView("", "");
+            StringBuilder ConnectionString = new StringBuilder();
+            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                    .Append("USER ID=").Append(ProjectSettings.dbUser);
+            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+            conn.Open();
+            string cmd2 = "select name, round(distance,3) as Distance, website from srajagop.location,(select restaurantid,touristid as ti,2*6373*ASIN(sqrt((sin((0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2))*(sin(0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2)))+(cos(0.017453293*(srajagop.location.latitude))*cos(0.017453293*(srajagop.restaurant.latitude))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))))) as distance from ProjectSettings.schema.RESTAURANT, srajagop.location where restaurantid =" + rid + " order by distance) where touristid = ti and rownum<=10";
+            OleDbCommand name3 = new OleDbCommand(cmd2, conn);
+            OleDbDataAdapter oAdapter2 = new OleDbDataAdapter(name3);
+            oAdapter2.Fill(tbl2);
+            DataView myDataView2 = new DataView();
+            myDataView2 = tbl2.Tables[0].DefaultView;
+            GridView2.DataSource = myDataView2;
+            GridView2.DataBind();
+            conn.Close();
         }
         if (Request.QueryString["restaurant"] != null)
         {
@@ -92,20 +109,14 @@ public partial class Account_Restaurants : System.Web.UI.Page
             string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS, PRIVATEDINING,LATITUDE,LONGITUDE,PRICE,RATING,CASHONLY,PARKING,SMOKING,ALCOHOL,WIFI, WEBSITE, TELEPHONE FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " + rid;
             string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID =" + rid;
             //string cmd2 = "select name, latitude, longitude from srajagop.location, (select touristid as ti from srajagop.nearby where restaurantid ="+rid+") where touristid=ti";
-            string cmd2 = "select name, round(distance,3) as Distance, website from srajagop.location,(select restaurantid,touristid as ti,2*6373*ASIN(sqrt((sin((0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2))*(sin(0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2)))+(cos(0.017453293*(srajagop.location.latitude))*cos(0.017453293*(srajagop.restaurant.latitude))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))))) as distance from ProjectSettings.schema.RESTAURANT, srajagop.location where restaurantid ="+ rid +" order by distance) where touristid = ti and rownum<=10";
-            System.Diagnostics.Debug.WriteLine("Quer y is " + cmd2);
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand name1 = new OleDbCommand(cmd, conn);
             OleDbDataReader oReader = name1.ExecuteReader();
-            OleDbCommand name2 = new OleDbCommand(cmd2, conn);
-            OleDbDataReader oReader2 = name2.ExecuteReader();
-            
             oReader.Read();
-            oReader2.Read();
             rName = oReader[0].ToString();
             cuisine = oReader[1].ToString();
-            tName = oReader2[0].ToString();
+           
          //   latr = Lat.to
             cuisine = cuisine.Replace("restaurant", "");
             location = "";
@@ -208,14 +219,6 @@ public partial class Account_Restaurants : System.Web.UI.Page
             GridView1.DataBind(); 
             
             GridView1.PagerSettings.Mode = PagerButtons.Numeric;
-            OleDbCommand name3 = new OleDbCommand(cmd2, conn);
-            OleDbDataAdapter oAdapter2 = new OleDbDataAdapter(name3);
-            oAdapter2.Fill(tbl2);
-            DataView myDataView2 = new DataView();
-            myDataView2 = tbl2.Tables[0].DefaultView;
-            GridView2.DataSource = myDataView2;
-            GridView2.DataBind(); 
-            
                                 
             conn.Close();
             Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "gMaps()", true);
