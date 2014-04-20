@@ -145,7 +145,7 @@
             <p>
                 <asp:GridView CssClass="GridViewStyle" ID="GridView2" runat="server" PageSize="25" AutoGenerateColumns="False" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" Width="100%" HorizontalAlign="Center">
                         <Columns>
-                        <asp:TemplateField HeaderText="Name">
+                        <asp:TemplateField HeaderStyle-Font-Underline="false" HeaderText="Name">
                             <ItemTemplate>
                                 <asp:HyperLink ID="Label1" runat="server" Text='<%# Bind("NAME") %>' Target="_blank" NavigateUrl='<%#Bind("Website") %>' ></asp:HyperLink>
                             </ItemTemplate>
