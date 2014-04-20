@@ -9,11 +9,12 @@
         <h1>Gourmet Guide</h1>
         <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
     </div>
-    <div class="Restaurant details">
+    <div class ="row">
+    <div id ="detailsdiv" class="col-md-5" style="background-color: #000000; color: #ffffff;">
         <h4>
             <asp:TableCell runat="server" Font-Bold="True" Text=" "><b>Restaurant Name : </b></asp:TableCell><%=rName%></h4>
         <h4>
-            <asp:TableCell runat="server" Font-Bold="True" Text=" "><b>Cuisine : </b></asp:TableCell><%=cuisine%></h4>
+            <asp:TableCell runat="server" Font-Bold="True" Text=" "><b>Cuisine : </b></asp:TableCell><%=cuisine %></h4>
         <h4>
             <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Restaurant Address : </b></asp:TableCell><%=location %>
         </h4>
@@ -21,16 +22,58 @@
             <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Working Hours : </b></asp:TableCell><%=workingHours %>
         </h4>
         <h4>
-            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Restaurant Holidays : </b></asp:TableCell><%=holiday %>
+            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Contact : <asp:HyperLink ID="webAddr" runat="server" Target="_blank"></asp:HyperLink></b></asp:TableCell><%=addressStr %>
+            
         </h4>
         <h4>
-            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Restaurant Address : </b></asp:TableCell><%=tName %>
+            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Telephone : </b></asp:TableCell><%=contact %>
+            
         </h4>
+        </div>
+ 
+    <div class="col-md-5">
         
+        <asp:Table ID="Table1" runat="server" BackColor="Black" ForeColor="White" Height="184px" Width="100%" CellPadding="10" CellSpacing="10" Font-Bold="True" Font-Overline="False">
+            <asp:TableRow ID="Row1" runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
+                <asp:TableCell   runat="server">Price-Range:</asp:TableCell>
+                <asp:TableCell   runat="server">Rating:</asp:TableCell>
+                <asp:TableCell   runat="server">Cash Only:</asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow ID="TableRow1" runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
+                <asp:TableCell ID="price" runat="server"></asp:TableCell>
+                <asp:TableCell ID="rating" runat="server"></asp:TableCell>
+                <asp:TableCell ID="cashonly" runat="server"></asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
+                <asp:TableCell   runat="server">Parking:</asp:TableCell>
+                <asp:TableCell   runat="server">Smoking:</asp:TableCell>
+                <asp:TableCell   runat="server">Alcohol: </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow ID="TableRow2" runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
+                <asp:TableCell ID="parking" runat="server"></asp:TableCell>
+                <asp:TableCell ID="smoking" runat="server"></asp:TableCell>
+                <asp:TableCell ID="alcohol" runat="server"></asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
+                <asp:TableCell   runat="server">WiFi: </asp:TableCell>
+                <asp:TableCell   runat="server">Private Dining: </asp:TableCell>
+                <asp:TableCell   runat="server">Restaurant Hoiday: </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow ID="TableRow3" runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
+                <asp:TableCell ID="wifi" runat="server"></asp:TableCell>
+                <asp:TableCell ID="privatedining" runat="server"></asp:TableCell>
+                <asp:TableCell ID="holiday" runat="server"></asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+           <br />
+           </div>
     </div>
-    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/jquery-1.10.2.js">
+    </script>
+
     <script src='<%=gUrl%>'>
     </script>
+
     <script type="text/javascript">
         /*
          * Call googleMaps api to show the location on Map
@@ -40,7 +83,7 @@
             var lng = '<% =lng%>';
             var latlng = new google.maps.LatLng(Lat, lng);
                 var myOptions = {
-                    zoom: 70,
+                    zoom: 17,
                     center: latlng,
                     mapTypeId: google.maps.MapTypeId.HYBRID
                 }
@@ -54,16 +97,17 @@
             }
         
     </script>
+    
     <!-- Tourist spots-->
      <div class="right-col">
             
     <div class="row">
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
-            <h4> 
+            <h4 class="text-danger"> 
 
-                <p class="text-danger">
+                
                     We're sorry. We don't have the details of Food Items available at the restaurant. Kindly contact the restaurant to obtain more information 
-                </p>
+                
             </h4>
 
         </div>
@@ -126,5 +170,6 @@
             <asp:Button ID="TableReserve" Text="Table Reserve" OnClick="TableReserve_Click" runat="server" CssClass="btn btn-default" />
             <asp:Button ID="FoodReserve" Text="Order food" OnClick="FoodReserve_Click" runat="server" CssClass="btn btn-default" />
         </p>
+    </div>
     </div>
 </asp:Content>

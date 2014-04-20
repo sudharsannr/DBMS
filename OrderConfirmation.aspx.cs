@@ -33,7 +33,7 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
         if (Session["bookDetails"] != null)
         {
             str_bookDetails = Session["bookDetails"].ToString();
-            str_bookDetails = str_bookDetails.Replace("~", System.Environment.NewLine);
+            str_bookDetails = str_bookDetails.Replace("~", "</ br>");
             bookDetails.Text = str_bookDetails;
             System.Diagnostics.Debug.WriteLine("BookDetails: " + str_bookDetails);
             //Session.Remove("bookDetails");
