@@ -16,6 +16,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
     DataTable tbl = new DataTable();    
     public string rid;
     public bool val1 = false;
+    string eMail;
     OleDbConnection conn = null;
     OleDbDataReader oReader;
     protected void Page_Load(object sender, EventArgs e)
@@ -103,7 +104,6 @@ public partial class Account_OrderFood : System.Web.UI.Page
             CheckBoxValidator.Visible = true;
             return;
         }
-        string eMail;
         if (val1)
         {
             string cmd = "select EMAILID from srajagop.RegisteredUser where userName='" + System.Web.HttpContext.Current.User.Identity.Name + "'";
@@ -154,7 +154,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
             bookDetails += String.Format("{0, -50} {1, 0}~", "Total purchase amount: ", TotalPrice.Value);
         }
         conn.Close();
-
+        insertintoOrderFood();
         /*string subject = "GourmetGuide food order confirmation";
         var content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + bookDetails + "\n\n"
                   + "GourmetGuide team.";
@@ -166,5 +166,20 @@ public partial class Account_OrderFood : System.Web.UI.Page
         Session["registered"] = val1.ToString();
         Session["type"] = "food";
         Response.Redirect("~/OrderConfirmation.aspx", true);
+    }
+
+    private void insertintoOrderFood()
+    {
+        string OrderFoodcmd = "insert into srajagop.FoodOrder values(?,?,?)";
+        OleDbTransaction tran = null;
+        conn.Open();      
+        tran = conn.BeginTransaction();
+        OleDbCommand insert_foodOrder = new OleDbCommand(OrderFoodcmd, conn, tran);
+        insert_foodOrder.Parameters.Add("?", OleDbType.Integer).Value = rid;
+        insert_foodOrder.Parameters.Add("?", OleDbType.VarChar).Value = eMail;
+        insert_foodOrder.Parameters.Add("?", OleDbType.VarChar).Value = TotalPrice.Value;
+        insert_foodOrder.ExecuteNonQuery();
+        tran.Commit();
+        conn.Close();
     }
 }

@@ -16,12 +16,24 @@
             $('#freqSrch').on('click', function (event) {
                 $('#freqSrchResult').toggle('show');
             });
+            $('#SameLocfreqSrch').on('click', function (event) {
+                $('#SameLocfreqSrchResult').toggle('show');
+            });
+            $('#FoodLiked').on('click', function (event) {
+                $('#FoodLikedResult').toggle('show');
+            });
+            $('#RestaurantLiked').on('click', function (event) {
+                $('#RestaurantLikedResult').toggle('show');
+            });
         });
 
         function panelLoad() {
             console.log("Inside panelLoad ");
             $("#recentSrchResult").hide();
             $("#freqSrchResult").hide();
+            $("#SameLocfreqSrchResult").hide();
+            $("#FoodSrchResult").hide();
+            $("#RestaurantLikedResult").hide();
         }
     </script>
     <div class="row">
@@ -53,6 +65,52 @@
                 <asp:Repeater ID="FrequentSearchRepeater" runat="server">
                     <ItemTemplate>
                         <asp:LinkButton runat="server" AutoPostBack="false" ID="FrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="FrequentSearchTerm_Click" CausesValidation="false"/>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <div id="SameLocfreqSrch">
+                <p>
+                    People from <% =city %> mostly searched for
+                </p>
+            </div>
+            <div id="SameLocfreqSrchResult">
+                <asp:Repeater ID="SameLocFrequentSearchRepeater" runat="server">
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" AutoPostBack="false" ID="SameLocFrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SameLocFrequentSearchTerm_Click" CausesValidation="false"/>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <div id="FoodLiked">
+                <p>
+                    Your most liked food's based on your previous orders
+                </p>
+            </div>
+            <div id="FoodLikedResult">
+                <asp:Repeater ID="FoodLikedRepeater" runat="server">
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" AutoPostBack="false" ID="FoodLikedTerm" Text='<%# Eval("foodname") %>' OnClick="FoodLikedTerm_Click" CausesValidation="false"/>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <div id="RestaurantLiked">
+                <p>
+                    Restaurant's you prefer ordering from
+                </p>
+            </div>
+            <div id="RestaurantLikedResult">
+                <asp:Repeater ID="RestaurantLikedRepeater" runat="server" OnItemDataBound="RestaurantLikedRepeater_ItemDataBound">
+                    <ItemTemplate>
+                        <asp:Label ID="Label1" runat="server" Text='<%# Eval("restaurantid") %>' Visible="false"></asp:Label>
+                        <asp:HyperLink runat="server" AutoPostBack="false" ID="RestaurantLikedTerm"  Text='<%# Eval("name") %>' CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
