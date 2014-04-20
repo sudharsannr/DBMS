@@ -256,13 +256,19 @@ public partial class Search : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE '%" + searchString + "%' OR UPPER(CITY) LIKE '%" + searchString + "%' OR UPPER(STATE) LIKE '%" + searchString + "%' OR UPPER(DESCRIPTION) LIKE '%" + searchString + "%' UNION SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND SRAJAGOP.FOOD.FOODID IN (SELECT SRAJAGOP.FOOD.FOODID FROM SRAJAGOP.FOOD WHERE (UPPER(SRAJAGOP.FOOD.NAME) LIKE '% " + searchString + " %') OR (UPPER(SRAJAGOP.FOOD.NAME) LIKE '% " + searchString + "') OR (UPPER(SRAJAGOP.FOOD.NAME) LIKE '" + searchString + " %') OR (UPPER(SRAJAGOP.FOOD.NAME) = '" + searchString + "')))";
+            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE ? OR UPPER(CITY) LIKE ? OR UPPER(STATE) LIKE ? OR UPPER(DESCRIPTION) LIKE ? UNION SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND SRAJAGOP.FOOD.FOODID IN (SELECT SRAJAGOP.FOOD.FOODID FROM SRAJAGOP.FOOD WHERE (UPPER(SRAJAGOP.FOOD.NAME) LIKE ?)))";
             System.Diagnostics.Debug.WriteLine("Simpe query: " + cmd);
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+            OleDbParameter param = new OleDbParameter();
+            OleDbCommand simp_search = new OleDbCommand(cmd, conn);
+            simp_search.Parameters.Add("@p1", OleDbType.VarChar).Value = "%" + searchString + "%";
+            simp_search.Parameters.Add("@p2", OleDbType.VarChar).Value = "%" + searchString + "%";
+            simp_search.Parameters.Add("@p3", OleDbType.VarChar).Value = "%" + searchString + "%";
+            simp_search.Parameters.Add("@p4", OleDbType.VarChar).Value = "%" + searchString + "%";
+            simp_search.Parameters.Add("@p5", OleDbType.VarChar).Value = "%" + searchString + "%";
             conn.Open();
-            OleDbCommand select_search = new OleDbCommand(cmd, conn);
-            OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
-            tbl.Clear();
+            OleDbDataAdapter oAdapter = new OleDbDataAdapter(simp_search);
+            //tbl.Clear();
             oAdapter.Fill(tbl);
             DataView myDataView = new DataView();
             myDataView = tbl.Tables[0].DefaultView;
@@ -270,7 +276,6 @@ public partial class Search : System.Web.UI.Page
             {
                 myDataView.Sort = string.Format("{0} {1}", sortExp, sortDir);
             }
-
             GridView1.DataSource = myDataView;
             GridView1.DataBind();
             GridView1.PagerSettings.Mode = PagerButtons.Numeric;
@@ -311,7 +316,7 @@ public partial class Search : System.Web.UI.Page
         oAdapter.Fill(tbl);
         //RestaurantRepeater.DataSource = oReader;
         //RestaurantRepeater.DataBind();
-        oAdapter.Fill(tbl);
+        //oAdapter.Fill(tbl);
         DataView myDataView = new DataView();
         myDataView = tbl.Tables[0].DefaultView;
         if (sortExp != string.Empty)

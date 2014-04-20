@@ -40,7 +40,11 @@ public partial class Account_Restaurants : System.Web.UI.Page
         {
             ViewState["sortOrder"] = "";
             bindGridView("", "");
-        }        
+        }
+        if (Request.QueryString["restaurant"] != null)
+        {
+            rid = Request.QueryString["restaurant"];
+        }
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
@@ -170,6 +174,7 @@ public partial class Account_Restaurants : System.Web.UI.Page
     }
     protected void FoodReserve_Click(object sender, EventArgs e)
     {
+        string str = "~/OrderFood?restaurant=" + rid;
         Response.Redirect("~/OrderFood?restaurant=" + rid);
     }  
 }
