@@ -26,7 +26,7 @@ public partial class Account_Restaurants : System.Web.UI.Page
     public string workingHours;
     public String location;
     public string gUrl = "http://maps.googleapis.com/maps/api/js?key=" + ProjectSettings.googleMapsKey + "&sensor=false";
-    public string holiday;
+    public string contact;
     public string Lat;
     public string lng;
     public float latr;
@@ -88,7 +88,7 @@ public partial class Account_Restaurants : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS, PRIVATEDINING,LATITUDE,LONGITUDE FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " + rid;
+            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID,NONWORKINGDAYS, PRIVATEDINING,LATITUDE,LONGITUDE,PRICE,RATING,CASHONLY,PARKING,SMOKING,ALCOHOL,WIFI, WEBSITE, TELEPHONE FROM ProjectSettings.schema.RESTAURANT WHERE RESTAURANTID = " + rid;
             string cmd1 = "SELECT DISTINCT ProjectSettings.schema.FOOD.NAME, ProjectSettings.schema.FDPRICECATALOG.PRICE FROM ProjectSettings.schema.FOOD INNER JOIN ProjectSettings.schema.FDPRICECATALOG ON ProjectSettings.schema.FOOD.FOODID = ProjectSettings.schema.FDPRICECATALOG.FOODID INNER JOIN ProjectSettings.schema.RESTAURANT ON ProjectSettings.schema.RESTAURANT.RESTAURANTID = ProjectSettings.schema.FDPRICECATALOG.RESTAURANTID WHERE ProjectSettings.schema.RESTAURANT.RESTAURANTID =" + rid;
             //string cmd2 = "select name, latitude, longitude from srajagop.location, (select touristid as ti from srajagop.nearby where restaurantid ="+rid+") where touristid=ti";
             string cmd2 = "select name, round(distance,3) as Distance from srajagop.location,(select restaurantid,touristid as ti,2*6373*ASIN(sqrt((sin((0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2))*(sin(0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2)))+(cos(0.017453293*(srajagop.location.latitude))*cos(0.017453293*(srajagop.restaurant.latitude))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))))) as distance from ProjectSettings.schema.RESTAURANT, srajagop.location where restaurantid ="+ rid +" order by distance) where touristid = ti and rownum<=10";
@@ -119,10 +119,60 @@ public partial class Account_Restaurants : System.Web.UI.Page
                 }
             }
             workingHours = oReader[2].ToString() + " - " + oReader[3].ToString();
-            string[] days = { "Working All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-            holiday = days[System.Convert.ToInt32(oReader[10].ToString())];
             Lat = oReader[12].ToString();
             lng = oReader[13].ToString();
+
+            webAddr.NavigateUrl = oReader[21].ToString();
+            webAddr.Text = oReader[21].ToString();
+
+            if (webAddr.Text == "")
+                addressStr = "N/A";
+            else
+                addressStr = "";
+            
+            contact = oReader[22].ToString();
+            if ( System.Convert.ToInt32(oReader[14]) == 0)
+            price.Text = "N/A";
+            for(int i=0;i<System.Convert.ToInt32(oReader[14]);i++)
+            price.Text += " $";
+
+            if (System.Convert.ToInt32(oReader[15]) == 0)
+            rating.Text = "N/A";
+            for (int i = 0; i < System.Convert.ToInt32(oReader[15]); i++)
+                rating.Text += " ★";
+            if(oReader[16].ToString().ToUpper().Equals("Y"))
+                cashonly.Text += " Yes";
+            else
+                cashonly.Text += " No";
+
+            if (oReader[17].ToString().ToUpper().Equals("Y"))
+                parking.Text += " Yes";
+            else
+                parking.Text += " No";
+
+            if (oReader[18].ToString().ToUpper().Equals("Y"))
+                smoking.Text += " Yes";
+            else
+                smoking.Text += " No";
+
+            if (oReader[19].ToString().ToUpper().Equals("Y"))
+                alcohol.Text += " Yes";
+            else
+                alcohol.Text += " No";
+
+            if (oReader[20].ToString().ToUpper().Equals("Y"))
+                wifi.Text += " Yes";
+            else
+                wifi.Text += " No";
+
+            if (oReader[12].ToString().ToUpper().Equals("Y"))
+                privatedining.Text += " Yes";
+            else
+                privatedining.Text += " No";
+
+            string[] days = { "Working All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            holiday.Text += days[System.Convert.ToInt32(oReader[10].ToString())];
+            
             OleDbCommand select_search = new OleDbCommand(cmd1, conn);
             OleDbDataAdapter oAdapter = new OleDbDataAdapter(select_search);
             oAdapter.Fill(tbl);

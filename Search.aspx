@@ -58,7 +58,7 @@
             else {
                 //simple search
                 console.log('show simple');
-                $("#MainContent_AdvSrchPanel").slideUp();
+                $("#MainContent_AdvSrchPanel").hide();
                 $("#MainContent_searchDiv").slideDown();
                 $("#MainContent_srchHidden").val('simple');
                 toggle = false;
