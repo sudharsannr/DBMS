@@ -13,6 +13,9 @@
     </div>
     <div>
         <div class="form-group">
+             <div style ="col-md-5" id="bookDetails" runat="server">
+        </div>
+            <br /><br />
             <asp:Label runat="server" AssociatedControlID="Address1" ID="Address1Label" CssClass="col-md-2 control-label">Address1</asp:Label>
             <div class="col-md-10">
                 <asp:TextBox runat="server" ID="Address1" CssClass="form-control"/>
@@ -28,9 +31,10 @@
                     CssClass="text-danger" ErrorMessage="Address field is required." />
             </div>
         </div>
-        <asp:Label ID="bookDetails" runat="server" />
+       
     </div>
     <div class="col-md-5">
+        <br />
         <asp:Button ID="ConfirmBtn" runat="server" Text="Confirm" CssClass="btn btn-default" OnClick="ConfirmBtn_Click" />
     </div>
 </asp:Content>

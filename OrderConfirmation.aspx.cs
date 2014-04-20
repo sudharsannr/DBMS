@@ -15,6 +15,7 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
     string str_bookDetails = "";
     string str_orderType = "";
     string str_registered = "";
+    StringBuilder booking = new StringBuilder();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["eMail"] != null)
@@ -33,8 +34,20 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
         if (Session["bookDetails"] != null)
         {
             str_bookDetails = Session["bookDetails"].ToString();
-            str_bookDetails = str_bookDetails.Replace("~", "</ br>");
-            bookDetails.Text = str_bookDetails;
+            string[] str_booking = str_bookDetails.Split('~');
+            booking.Append("<b>"+str_booking[0].ToString()+"</b>");
+            booking.Append("<table cellspacing = 10 cellpadding = 5>")
+                    .Append("<tr><th>"+str_booking[1]+"</th>")
+                    .Append("<th>"+str_booking[2]+"</th></tr>");
+            for (int i = 3; i < str_booking.Length-3; i+=2 )
+            {
+                booking.Append("<tr><td>"+str_booking[i] + "</td>");
+                booking.Append("<td>" + str_booking[i + 1] + "</td> </tr>");
+            }
+            booking.Append("<tr><th>" + str_booking[str_booking.Length-3] + "</th>");
+            booking.Append("<th>" + str_booking[str_booking.Length - 2] + "</th> </tr>");
+            booking.Append("</table>");
+            bookDetails.InnerHtml = booking.ToString();
             System.Diagnostics.Debug.WriteLine("BookDetails: " + str_bookDetails);
             //Session.Remove("bookDetails");
         }

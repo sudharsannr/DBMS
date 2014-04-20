@@ -59,12 +59,11 @@ public partial class Account_OrderFood : System.Web.UI.Page
                 NoResult.Visible = false;
                 StringBuilder tblData = new StringBuilder();
                 tblData.Append("<table>")
-                        .Append("<th>")
-                        .Append("<td>NAME</td>")
-                        .Append("<td>COST</td>")
-                        .Append("<td>QUANTITY</td>")
-                        .Append("<td>TOTAL PRICE</td>")
-                        .Append("</th>");
+                        .Append("<tr><b><th>Select&nbsp;&nbsp;</th>")
+                        .Append("<th>Name&nbsp;&nbsp;</th>")
+                        .Append("<th>Cost&nbsp;&nbsp;</th>")
+                        .Append("<th>Quantity&nbsp;&nbsp;</th>")
+                        .Append("<th>Total&nbsp;&nbsp;</th></b></tr>");
                 int rowCount = 0;
                 foreach (DataRow row in tbl.Rows)
                 {
@@ -129,7 +128,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
         OleDbTransaction tran = null;
         conn.Open();      
 
-        bookDetails += "Food order summary:~ " + String.Format("{0, -50} {1, 0}~", "Item", "Price");
+        bookDetails += "Food order summary:~ " + String.Format("{0, -50}~{1, 0}~", "Item", "Price");
         if(orderData.Length > 0)
         {
             foreach(string dt in orderData)
@@ -139,7 +138,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
                 {
                     string[] t = dt.Split('|');
                     System.Diagnostics.Debug.WriteLine(t[0] + "--" + t[1]);
-                    bookDetails += String.Format("{0, -50} {1, 0}~", t[0], t[1]);
+                    bookDetails += String.Format("{0, -50}~{1, 0}~", t[0], t[1]);
                     //TODO: Can this be reused?
                     tran = conn.BeginTransaction();
                     OleDbCommand insert_foodreserve = new OleDbCommand(insertParkingcmd, conn, tran);
@@ -151,7 +150,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
                     tran.Commit();
                 }
             }
-            bookDetails += String.Format("{0, -50} {1, 0}~", "Total purchase amount: ", TotalPrice.Value);
+            bookDetails += String.Format("{0, -50}~{1, 0}~", "Total: ", TotalPrice.Value);
         }
         conn.Close();
         insertintoOrderFood();
