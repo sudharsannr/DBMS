@@ -19,7 +19,7 @@
     <div class="col-md-5" style="font-size: medium; background-color: #f0f0f0; color: black; border: solid; border-color:white; border-width: thick;">
        
         <br />
-       
+      <div id ="emaildiv" runat="server">
     <asp:Label runat="server" AssociatedControlID="EMailID" ID="EMailLabel">EMail Address*</asp:Label>
         <br />
         <br />
@@ -36,7 +36,7 @@
                 EnableClientScript="True" 
                 runat="server"/>
         <br />
-       
+       </div>
     <asp:Label runat="server" AssociatedControlID="EMailID" ID="EMailLabel0">Your Order Total is : $ </asp:Label>
         <label id="totalPrice"></label>
         <br />

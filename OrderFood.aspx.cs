@@ -29,9 +29,11 @@ public partial class Account_OrderFood : System.Web.UI.Page
             rfvEmail.Enabled = false;
             EMailID.Visible = false;
             EMailLabel.Visible = false;
+            emaildiv.Visible = false;
         }
         else
         {
+            emaildiv.Visible = true;
             EMailID.Visible = true;
             EMailLabel.Visible = true;
         }
@@ -58,7 +60,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
             {
                 NoResult.Visible = false;
                 StringBuilder tblData = new StringBuilder();
-                tblData.Append("<table>")
+                tblData.Append("<table cellspacing = 5; cellpadding = 5>")
                         .Append("<tr><b><th>Select&nbsp;&nbsp;</th>")
                         .Append("<th>Name&nbsp;&nbsp;</th>")
                         .Append("<th>Cost&nbsp;&nbsp;</th>")
