@@ -33,7 +33,7 @@
  
     <div class="col-md-5">
         
-        <asp:Table ID="Table1" runat="server" BackColor="Black" ForeColor="White" Height="184px" Width="100%" CellPadding="10" CellSpacing="10" Font-Bold="True" Font-Overline="False">
+        <asp:Table ID="Table1" runat="server" BackColor="Black" ForeColor="White" Height="184px" Width="100%" Font-Bold="True" Font-Overline="False">
             <asp:TableRow ID="Row1" runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
                 <asp:TableCell   runat="server">Price-Range:</asp:TableCell>
                 <asp:TableCell   runat="server">Rating:</asp:TableCell>
@@ -117,9 +117,9 @@
              
                     <Columns>
                         <asp:TemplateField HeaderText="Name" SortExpression="NAME">
-                            <EditItemTemplate>
+                            <%--<EditItemTemplate>
                                 <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("NAME") %>'></asp:TextBox>
-                            </EditItemTemplate>
+                            </EditItemTemplate>--%>
                             <ItemTemplate>
                                 <asp:Label ID="Label1" runat="server" Text='<%# Bind("NAME") %>'></asp:Label>
                             </ItemTemplate>
@@ -142,11 +142,11 @@
         <div class="row-md-5" id="map" style="width: 500px; height: 500px;">
         </div>
         <div class ="row-md-5">
-            <p>"you are my darling"
+            <p>
                 <asp:GridView CssClass="GridViewStyle" ID="GridView2" runat="server" PageSize="25" AutoGenerateColumns="False" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" Width="100%" HorizontalAlign="Center">
                         <Columns>
-                        <asp:BoundField DataField="Name" HeaderText="NAME" />
-                        <asp:BoundField DataField="Distance" HeaderText="Distance" />
+                        <asp:BoundField DataField="Name" HeaderText="Name" HeaderStyle-Font-Underline="false" />
+                        <asp:BoundField DataField="Distance" HeaderText="Distance" HeaderStyle-Font-Underline="false"/>
                         
                     </Columns>
                     <RowStyle CssClass="RowStyle" />
