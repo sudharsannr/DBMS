@@ -22,7 +22,7 @@
             <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Working Hours : </b></asp:TableCell><%=workingHours %>
         </h4>
         <h4>
-            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Contact : <asp:HyperLink ID="webAddr" runat="server" Target="_blank"></asp:HyperLink></b></asp:TableCell><%=addressStr %>
+            <asp:TableCell runat="server" Font-Bold="true" Text=" "><b>Web Site : <asp:HyperLink ID="webAddr" runat="server" Target="_blank"></asp:HyperLink></b></asp:TableCell><%=addressStr %>
             
         </h4>
         <h4>
@@ -145,7 +145,11 @@
             <p>
                 <asp:GridView CssClass="GridViewStyle" ID="GridView2" runat="server" PageSize="25" AutoGenerateColumns="False" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" Width="100%" HorizontalAlign="Center">
                         <Columns>
-                        <asp:BoundField DataField="Name" HeaderText="Name" HeaderStyle-Font-Underline="false" />
+                        <asp:TemplateField HeaderText="Name">
+                            <ItemTemplate>
+                                <asp:HyperLink ID="Label1" runat="server" Text='<%# Bind("NAME") %>' Target="_blank" NavigateUrl='<%#Bind("Website") %>' ></asp:HyperLink>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:BoundField DataField="Distance" HeaderText="Distance" HeaderStyle-Font-Underline="false"/>
                         
                     </Columns>
@@ -158,7 +162,6 @@
     <SortedAscendingHeaderStyle CssClass="sortasc" />
     <SortedDescendingHeaderStyle CssClass="sortdesc" />
                 </asp:GridView>
-            </p>
             </p>
         </div>
         </div> 
