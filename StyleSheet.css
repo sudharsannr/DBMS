@@ -6,7 +6,7 @@
     table-layout: auto;
     border-collapse: collapse;
     border: #1d1d1d 25px solid;
-    background-color: black;
+    background-color: #333333;
     border-color: white;
     border-radius: 20px
 }
@@ -91,8 +91,8 @@
 }
 
 .SearchStyle {
-    border: thick solid #000000; 
-    background-color: #000000; 
+    border: thick solid #333333; 
+    background-color: #333333; 
     padding: 20px;
     width: 425px; 
     table-layout: inherit; 

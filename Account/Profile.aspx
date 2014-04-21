@@ -10,19 +10,43 @@
     <script type="text/javascript">
         $(document).ready(function () {
             panelLoad();
+            $('#recentSrch,#freqSrch,#SameLocfreqSrch,#FoodLiked,#RestaurantLiked').mouseenter(function (event) {
+                $(this).css('color', 'blue');
+                $(this).css('text-decoration', 'underline');
+                $(this).css('cursor', 'hand');
+            }
+                );
+            $('#recentSrch,#freqSrch,#SameLocfreqSrch,#FoodLiked,#RestaurantLiked').mouseleave(function (event) {
+                $(this).css('color', 'black');
+                $(this).css('text-decoration', 'none');
+                $(this).css('cursor', 'pointer');
+            }
+                );
             $('#recentSrch').on('click', function (event) {
+                $("#recentSrchup").toggle('show');
+                $("#recentSrchdown").toggle('show');
                 $('#recentSrchResult').toggle('show');
+                
             });
             $('#freqSrch').on('click', function (event) {
+                $("#freqSrchup").toggle('show');
+                $("#freqSrchdown").toggle('show');
                 $('#freqSrchResult').toggle('show');
             });
             $('#SameLocfreqSrch').on('click', function (event) {
+                $("#SameLocfreqSrchup").toggle('show');
+                $("#SameLocfreqSrchdown").toggle('show');
                 $('#SameLocfreqSrchResult').toggle('show');
+                
             });
             $('#FoodLiked').on('click', function (event) {
+                $("#FoodLikedup").toggle('show');
+                $("#FoodLikeddown").toggle('show');
                 $('#FoodLikedResult').toggle('show');
             });
             $('#RestaurantLiked').on('click', function (event) {
+                $("#RestaurantLikedup").toggle('show');
+                $("#RestaurantLikeddown").toggle('show');
                 $('#RestaurantLikedResult').toggle('show');
             });
         });
@@ -32,8 +56,13 @@
             $("#recentSrchResult").hide();
             $("#freqSrchResult").hide();
             $("#SameLocfreqSrchResult").hide();
-            $("#FoodSrchResult").hide();
+            $("#FoodLikedResult").hide();
             $("#RestaurantLikedResult").hide();
+            $("#recentSrchup").hide();
+            $("#freqSrchup").hide();
+            $("#SameLocfreqSrchup").hide();
+            $("#FoodLikedup").hide();
+            $("#RestaurantLikedup").hide();
         }
     </script>
     <div class="row">
@@ -42,8 +71,9 @@
                 Welcome to your Profile Page!!
             </h2>
             <div id="recentSrch">
+                <br />
                 <p>
-                    Your Recent 5 searches
+                    Your Recent 5 searches <label id ="recentSrchdown"> ▼ </label> <label id ="recentSrchup"> ▲ </label>
                 </p>
             </div>
             <div id="recentSrchResult">
@@ -56,9 +86,10 @@
         </div>
         
         <div class="col-md-10">
+            <br />
             <div id="freqSrch">
                 <p>
-                    Your most frequent searches
+                    Your most frequent searches <label id ="freqSrchdown"> ▼ </label> <label id ="freqSrchup"> ▲ </label>
                 </p>
             </div>
             <div id="freqSrchResult">
@@ -71,13 +102,14 @@
         </div>
 
         <div class="col-md-10">
+            <br />
             <div id="SameLocfreqSrch">
                 <p>
-                    People from <% =city %> mostly searched for
+                    People from <% =city %> mostly searched for <label id ="SameLocfreqSrchdown"> ▼ </label> <label id ="SameLocfreqSrchup"> ▲ </label>
                 </p>
             </div>
             <div id="SameLocfreqSrchResult">
-                <asp:Repeater ID="SameLocFrequentSearchRepeater" runat="server">
+                <asp:Repeater ID="SameLocFrequentSearchRepeater" runat="server"> 
                     <ItemTemplate>
                         <asp:LinkButton runat="server" AutoPostBack="false" ID="SameLocFrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SameLocFrequentSearchTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
@@ -86,9 +118,10 @@
         </div>
 
         <div class="col-md-10">
+            <br />
             <div id="FoodLiked">
                 <p>
-                    Your most liked food's based on your previous orders
+                    Your most liked food's based on your previous orders <label id ="FoodLikeddown"> ▼ </label> <label id ="FoodLikedup"> ▲ </label>
                 </p>
             </div>
             <div id="FoodLikedResult">
@@ -101,9 +134,10 @@
         </div>
 
         <div class="col-md-10">
+            <br />
             <div id="RestaurantLiked">
                 <p>
-                    Restaurant's you prefer ordering from
+                    Restaurant's you prefer ordering from <label id ="RestaurantLikeddown"> ▼ </label> <label id ="RestaurantLikedup"> ▲ </label>
                 </p>
             </div>
             <div id="RestaurantLikedResult">
@@ -127,10 +161,7 @@
                 <asp:TextBox runat="server" ID="Search" CssClass="form-control" />
                 <asp:RequiredFieldValidator ID="rfvSearch" runat="server" ControlToValidate="Search"
                     CssClass="text-danger" ErrorMessage="Please enter a search criteria for better results" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                    <br />
                     <asp:Button ID="Button1" runat="server" Text="Search" CssClass="btn btn-default" OnClick="Button1_Click" />
                 </div>
             </div>

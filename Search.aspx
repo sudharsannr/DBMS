@@ -22,6 +22,7 @@
                 //advanced display
                 $("#MainContent_searchDiv").slideUp();
                 $("#MainContent_AdvSrchPanel").slideDown();
+                $("#advSrchButton").val('Back to simple');
                 $("#MainContent_srchHidden").val('advanced');
                 toggle = true;
             }
@@ -30,6 +31,7 @@
                 console.log('show simple');
                 $("#MainContent_AdvSrchPanel").slideUp();
                 $("#MainContent_searchDiv").slideDown();
+                $("#advSrchButton").val('Advanced Search');
                 $("#MainContent_srchHidden").val('simple');
                 toggle = false;
             }
@@ -43,6 +45,7 @@
                     //advanced display
                     $("#MainContent_searchDiv").slideUp();
                     $("#MainContent_AdvSrchPanel").slideDown();
+                    $("#advSrchButton").val('Back to Simple');
                     $("#MainContent_srchHidden").val('advanced');
                     toggle = true;
                 }
@@ -51,6 +54,7 @@
                     console.log('show simple');
                     $("#MainContent_AdvSrchPanel").slideUp();
                     $("#MainContent_searchDiv").slideDown();
+                    $("#advSrchButton").val('Advanced Search');
                     $("#MainContent_srchHidden").val('simple');
                     toggle = false;
                 }
@@ -60,6 +64,7 @@
                 console.log('show simple');
                 $("#MainContent_AdvSrchPanel").hide();
                 $("#MainContent_searchDiv").slideDown();
+                $("#advSrchButton").val('Advanced Search');
                 $("#MainContent_srchHidden").val('simple');
                 toggle = false;
             }
@@ -83,7 +88,7 @@
     </div>
     <div class="form-group" id="AdvSrchPanel" runat="server">
                 <div class="SearchStyle">
-                <table style="border: thick solid #000000;">
+                <table style="border: thick solid #333333;">
                 <tr><td style="border-color: none; border-style: none; font-family: Arial, Helvetica, sans-serif; color: #FFFFFF; font-weight: bold; width: 245px;">Restaurant Name <asp:TextBox  runat="server" ID="NameSearch" CssClass="form-control" Width="100%"/></td>
                 <td style="border-style: none; font-family: Arial, Helvetica, sans-serif; color: #FFFFFF; font-weight: bold; width: 278px;">Cuisine <asp:TextBox runat="server" ID="CuisineSearch" CssClass="form-control" Width="100%" /></td></tr>
                 <tr><td style="border-color: none; border-style: none; font-family: Arial, Helvetica, sans-serif; color: #FFFFFF; font-weight: bold; width: 245px;">Open Time<asp:TextBox runat="server" ID="OpenTimeSearch" CssClass="form-control" Width="100%" /></td>
