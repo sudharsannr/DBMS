@@ -10,7 +10,7 @@
         <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
     </div>
     <div class ="row">
-    <div id ="detailsdiv" class="col-md-5" style="background-color: #000000; color: #ffffff;">
+    <div id ="detailsdiv" class="col-md-5" style="background-color: #333333; color: #ffffff;">
         <h4>
             <asp:TableCell runat="server" Font-Bold="True" Text=" "><b>Restaurant Name : </b></asp:TableCell><%=rName%></h4>
         <h4>
@@ -33,7 +33,7 @@
  
     <div class="col-md-5">
         
-        <asp:Table ID="Table1" runat="server" BackColor="Black" ForeColor="White" Height="184px" Width="100%" Font-Bold="True" Font-Overline="False">
+        <asp:Table ID="Table1" runat="server" BackColor="#333333" ForeColor="White" Height="184px" Width="100%" Font-Bold="True" Font-Overline="False">
             <asp:TableRow ID="Row1" runat="server" HorizontalAlign="Center" VerticalAlign="Middle">
                 <asp:TableCell   runat="server">Price-Range:</asp:TableCell>
                 <asp:TableCell   runat="server">Rating:</asp:TableCell>
