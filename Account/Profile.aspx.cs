@@ -36,7 +36,7 @@ public partial class Account_Default : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "select restaurantid,name from srajagop.restaurant where restaurantid = (select r1.restaurantid from (select restaurantid from (select count(*) as cnt,restaurantid from srajagop.foodOrder where emailID=(select emailID from srajagop.registereduser where username='" + System.Web.HttpContext.Current.User.Identity.Name + "') group by restaurantid order by cnt desc ) where rowNum<=5 ) r1 )";
+        string cmd = "select restaurantid,'&nbsp'||name||'&nbsp' as name from srajagop.restaurant where restaurantid = (select r1.restaurantid from (select restaurantid from (select count(*) as cnt,restaurantid from srajagop.foodOrder where emailID=(select emailID from srajagop.registereduser where username='" + System.Web.HttpContext.Current.User.Identity.Name + "') group by restaurantid order by cnt desc ) where rowNum<=5 ) r1 )";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_cmd = new OleDbCommand(cmd, conn);
@@ -54,7 +54,7 @@ public partial class Account_Default : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "select foodName from (select count(*) as cnt,foodname from srajagop.foodreserve where emailID=(select emailID from srajagop.registereduser where username='" + System.Web.HttpContext.Current.User.Identity.Name + "') group by foodname order by cnt desc) where rownum<=5";
+        string cmd = "select foodName from (select count(*) as cnt,'&nbsp'||foodname||'&nbsp' as foodname from srajagop.foodreserve where emailID=(select emailID from srajagop.registereduser where username='" + System.Web.HttpContext.Current.User.Identity.Name + "') group by foodname order by cnt desc) where rownum<=5";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_cmd = new OleDbCommand(cmd, conn);
@@ -97,7 +97,7 @@ public partial class Account_Default : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "select searchTerm from (select count(*) as cnt,searchTerm from srajagop.UserSearch where username in (select distinct srajagop.registeredUser.userName from srajagop.registeredUser where srajagop.registeredUser.city=(select distinct sRajagop.registeredUser.city from sRajagop.registeredUser where sRajagop.registeredUser.userName='" + System.Web.HttpContext.Current.User.Identity.Name + "') and srajagop.registeredUser.username<>'" + System.Web.HttpContext.Current.User.Identity.Name + "') group by searchTerm order by cnt desc) where rownum<=5";
+        string cmd = "select searchTerm from (select count(*) as cnt,'&nbsp'||searchTerm||'&nbsp' as searchTerm from srajagop.UserSearch where username in (select distinct srajagop.registeredUser.userName from srajagop.registeredUser where srajagop.registeredUser.city=(select distinct sRajagop.registeredUser.city from sRajagop.registeredUser where sRajagop.registeredUser.userName='" + System.Web.HttpContext.Current.User.Identity.Name + "') and srajagop.registeredUser.username<>'" + System.Web.HttpContext.Current.User.Identity.Name + "') group by searchTerm order by cnt desc) where rownum<=5";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_cmd = new OleDbCommand(cmd, conn);
@@ -117,7 +117,7 @@ public partial class Account_Default : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "select searchterm from (select r1.searchterm,r1.searchcount from (select count(*) as searchcount,searchterm from srajagop.usersearch where username='" + System.Web.HttpContext.Current.User.Identity.Name + "' group by searchTerm) r1 order by r1.searchcount desc) where rownum<=5";
+        string cmd = "select searchterm from (select '&nbsp'||r1.searchterm||'&nbsp' as searchterm,r1.searchcount from (select count(*) as searchcount,searchterm from srajagop.usersearch where username='" + System.Web.HttpContext.Current.User.Identity.Name + "' group by searchTerm) r1 order by r1.searchcount desc) where rownum<=5";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_cmd = new OleDbCommand(cmd, conn);
@@ -137,7 +137,7 @@ public partial class Account_Default : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "select searchTerm from(select distinct searchTerm from(select searchTerm from srajagop.usersearch where username='" + System.Web.HttpContext.Current.User.Identity.Name + "' order by searchTime desc)) where rownum<=5";
+        string cmd = "select searchTerm from(select distinct '&nbsp'||searchTerm||'&nbsp' as searchterm from(select searchTerm from srajagop.usersearch where username='" + System.Web.HttpContext.Current.User.Identity.Name + "' order by searchTime desc)) where rownum<=5";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
         OleDbCommand select_cmd = new OleDbCommand(cmd, conn);
