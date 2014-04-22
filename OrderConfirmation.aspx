@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Order confirmation" MaintainScrollPositionOnPostback="true" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.master" CodeFile="OrderConfirmation.aspx.cs" Inherits="Account_OrderConfirmation" %>
+﻿<%@ Page Title="Order confirmation" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.master" CodeFile="OrderConfirmation.aspx.cs" Inherits="Account_OrderConfirmation" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
      
          

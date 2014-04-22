@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MaintainScrollPositionOnPostback="true" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="ConfirmCode.aspx.cs" Inherits="Account_ConfirmCodeaspx" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="ConfirmCode.aspx.cs" Inherits="Account_ConfirmCodeaspx" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     
