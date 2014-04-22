@@ -2,6 +2,11 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     
     <div class="row">
+        <div class="col-md-5" id="NonWorkingMsg" runat="server" visible="false">
+            <h4 class="text-danger">                
+                    The restaurant is not open today. Please visit another day.
+            </h4>
+        </div>
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
             <h4 class="text-danger">                
                     We're sorry. We don't have the details of Food Items available at the restaurant. Kindly contact the restaurant to obtain more information                 

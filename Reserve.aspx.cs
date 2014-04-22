@@ -389,7 +389,7 @@ public partial class Account_Default : System.Web.UI.Page
         int avlCnt = 0;
         int totalpersons = 0;
         bookDetails += "Restaurant: " + name + "\n";
-        bookDetails += " Date and Time : " + datepicker.Text + " at " + DropDownList5.SelectedValue + "\n";
+        bookDetails += "Date and Time : " + datepicker.Text + " at " + DropDownList5.SelectedValue + "\n";
         for (int i = 0; i < 4; i++)
         {
             avlCnt = 0;
@@ -477,9 +477,13 @@ public partial class Account_Default : System.Web.UI.Page
         sm.send();
          */
         //Response.Redirect("/Account/Profile.aspx", true);
-        
+
         if (Preorder.Checked)
-            Response.Redirect("~/OrderFood.aspx/?prev=reserve&restaurant=" + Request.QueryString["restaurant"]);
+        {
+            Session["eMail"] = eMail;
+            Response.Redirect("~/OrderFood.aspx?prev=reserve&restaurant=" + Request.QueryString["restaurant"]);
+        }
+
         else
         {
             Response.Redirect("~/HomePage.aspx", true);

@@ -5,10 +5,9 @@
     font-size:small;
     table-layout: auto;
     border-collapse: collapse;
-    border: #1d1d1d 25px solid;
     background-color: #333333;
-    border-color: white;
-    border-radius: 20px
+    border-collapse: collapse;
+    border-color: none;
 }
 
 .PagerStyle /*Common Styles*/
@@ -25,6 +24,7 @@
     padding: 20px;
     color: #ffffff;
     text-decoration: underline;
+    border-color: none;
 }
 .GridViewStyle th a
 {
@@ -34,17 +34,20 @@
     text-align:left;
     font-weight:normal;
     padding-right:20px; 
+    border-color: none;
 }
 
 .PagerStyle table
 {
     text-align:center;
     margin:auto;
+    border-color: none;
 }
 .PagerStyle table td
 {
     border:0px;
     padding:5px;
+    border-color: none;
 }
 .PagerStyle td
 {
