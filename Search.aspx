@@ -61,7 +61,7 @@
                 //simple search
                 console.log('show simple');
                 $("#MainContent_AdvSrchPanel").hide();
-                $("#MainContent_searchDiv").slideDown();
+                //$("#MainContent_searchDiv").slideDown();
                 $("#advSrchButton").val('Advanced Search');
                 $("#MainContent_srchHidden").val('simple');
                 toggle = false;
