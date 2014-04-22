@@ -1,4 +1,4 @@
-﻿<%@ Page Title = "Restaurant Search" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
+﻿<%@ Page Title = "Restaurant Search" MaintainScrollPositionOnPostback="true" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="Search.aspx.cs" Inherits="Search" %>
 
 
 
@@ -68,7 +68,10 @@
             }
         }
     </script>
-    <div class="row">
+
+    <div class="row" >
+        <div class="col-md-5">
+
         <h2>Need something different?</h2>
         <p>
             Search anything ranging from Restaurant Name, State, City to Food Item or Cuisine
@@ -79,7 +82,7 @@
             <p><asp:TextBox runat="server" ID="SearchTextBox" CssClass="form-control" Width="32%" /></p> 
                 
             </div>
-    </div>
+        
     <div class="form-group" id="AdvSrchPanel" runat="server">
                 <div class="SearchStyle">
                 <table style="border: thick solid #333333;">
@@ -100,6 +103,88 @@
     <input type="button" Value="Advanced Search" Class="btn btn-default" id="advSrchButton"/>
     <br />
     <br />
+            </div>
+        
+    
+    <div class="form-group">
+
+        <div style="background-color: #eeeeee;" class="col-md-5" id="FilterDiv" runat="server">
+            <h1>Refine your search results</h1>
+              <div class="row">
+            <div class="col-md-3">
+
+            <h5>Cashonly&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h5>
+                <asp:RadioButtonList ID="CashOnlyButton" runat="server">
+                    <asp:ListItem Value="Y">Yes</asp:ListItem>
+                    <asp:ListItem Value="N">No</asp:ListItem>
+                
+                </asp:RadioButtonList>
+            <h5>Parking&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h5>
+                <asp:RadioButtonList ID="ParkingButton" runat="server">
+                    <asp:ListItem Value="Y">Yes</asp:ListItem>
+                    <asp:ListItem Value="N">No</asp:ListItem>
+                
+                </asp:RadioButtonList>
+            <h5>Smoking&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h5>
+                <asp:RadioButtonList ID="SmokingButton" runat="server">
+                    <asp:ListItem Value="Y">Yes</asp:ListItem>
+                    <asp:ListItem Value="N">No</asp:ListItem>
+                </asp:RadioButtonList>
+            </div>
+            <div class="col-md-3">
+            <h5>Alcohol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h5>
+                <asp:RadioButtonList ID="AlcoholButton" runat="server">
+                    <asp:ListItem Value="Y">Yes</asp:ListItem>
+                    <asp:ListItem Value="N">No</asp:ListItem>
+                </asp:RadioButtonList>
+                
+            <h5>WiFi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h5>
+                <asp:RadioButtonList ID="Wifibutton" runat="server">
+                    <asp:ListItem Value="Y">Yes</asp:ListItem>
+                    <asp:ListItem Value="N">No</asp:ListItem>
+                </asp:RadioButtonList>
+            <h5>Private Dining&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h5>
+                <asp:RadioButtonList ID="PrivateDining" runat="server">
+                    <asp:ListItem Value="Y">Yes</asp:ListItem>
+                    <asp:ListItem Value="N">No</asp:ListItem>
+                </asp:RadioButtonList>
+            </div>
+            <div class="col-md-3">
+                <h5>Minimum Rating&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                <asp:DropDownList ID="RatingDropDown" runat="server">
+                    <asp:ListItem Value="0">--select--</asp:ListItem>
+                    <asp:ListItem Value="1">★</asp:ListItem>
+                    <asp:ListItem Value="2">★★</asp:ListItem>
+                    <asp:ListItem Value="3">★★★</asp:ListItem>
+                    <asp:ListItem Value="4">★★★★</asp:ListItem>
+                    <asp:ListItem Value="5">★★★★★</asp:ListItem>
+                </asp:DropDownList>
+                <h5>Budget&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                <asp:DropDownList ID="PriceDropDown" runat="server">
+                    <asp:ListItem Value="0">--select--</asp:ListItem>
+                    <asp:ListItem Value="1">Very Cheap</asp:ListItem>
+                    <asp:ListItem Value="2">Cheap</asp:ListItem>
+                    <asp:ListItem Value="3">Nominal</asp:ListItem>
+                    <asp:ListItem Value="4">Expensive</asp:ListItem>
+                    <asp:ListItem Value="5">Very Expensive</asp:ListItem>
+                </asp:DropDownList>
+                <br />
+                <br />
+            </div>
+          
+        </div>
+            <asp:Button ID="Filter" runat="server" Text="Filter" CssClass="btn btn-default" OnClick="Filter_Click" />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button ID="Clear" runat="server" Text="Clear" CssClass="btn btn-default" OnClick="Clear_Click" />
+            </div>
+        </div>
+        </div>
     <div class="row" style="align-content:center">
         <p>
         <asp:GridView CssClass="GridViewStyle" ID="GridView1" runat="server" autogeneratecolumns="False" PageSize="25" AllowPaging="true" OnPageIndexChanging="GridView1_PageIndexChanging" AllowSorting="true" OnSorting="GridView1_Sorting">

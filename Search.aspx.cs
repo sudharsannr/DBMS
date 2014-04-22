@@ -20,13 +20,19 @@ public partial class Search : System.Web.UI.Page
     DataSet tbl = new DataSet();
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Request.QueryString["AdvancedSearch"] != null)
+            FilterDiv.Visible = true;
+        else if (Request.QueryString["SearchString"] == null)
+            FilterDiv.Visible = false;
+        else
+            FilterDiv.Visible = true;
         if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
             userName = System.Web.HttpContext.Current.User.Identity.Name;
         srchHiddenStr = srchHidden.Value;
         //srchType = searchType.Value;
         if (Session["searchType"] != null)
         {
-            if(Request.QueryString["SearchString"] == null && Request.QueryString["AdvancedSearch"] == null)
+            if (Request.QueryString["SearchString"] == null && Request.QueryString["AdvancedSearch"] == null)
             {
                 Session.Remove("searchType");
             }
@@ -34,7 +40,7 @@ public partial class Search : System.Web.UI.Page
             {
                 srchType = Session["searchType"].ToString();
                 System.Diagnostics.Debug.WriteLine("Session retrieved " + srchType);
-            //Session.Remove("searchType");
+                //Session.Remove("searchType");
             }
             //TODO: Assign search to textboxes pending
         }
@@ -84,7 +90,7 @@ public partial class Search : System.Web.UI.Page
         string citysearchString;
         string zipsearchString;
         string statesearchString;
-        string foodsearchString;        
+        string foodsearchString;
         if (NameSearch.Text.Trim().Length == 0)
             namesearchString = "UPPER(NAME)";
         else
@@ -140,7 +146,7 @@ public partial class Search : System.Web.UI.Page
     }
 
     private void insert_userSearch()
-    {        
+    {
         StringBuilder ConnectionString = new StringBuilder();
         ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
                 .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
@@ -189,10 +195,10 @@ public partial class Search : System.Web.UI.Page
     //}
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        GridView1.PageIndex = e.NewPageIndex;     
+        GridView1.PageIndex = e.NewPageIndex;
         System.Diagnostics.Debug.WriteLine("page index changed " + e.NewPageIndex);
         bindGridView("", "");
-           
+
     }
     protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
     {
@@ -290,7 +296,7 @@ public partial class Search : System.Web.UI.Page
                 gr.Cells[0].Controls.Add(hp);
             }
             conn.Close();
-        }        
+        }
     }
 
     private void AdvancedSearch(string namesearchString, string cuisinesearchString, string openTimesearchString, string closeTimesearchString, string citysearchString, string zipsearchString, string statesearchString, string foodsearchString, string sortExp, string sortDir)
@@ -305,7 +311,7 @@ public partial class Search : System.Web.UI.Page
         //string searchString = "GA";
         string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE ?  AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP LIKE " + zipsearchString + " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString;
         if (foodsearchString != "UPPER(FOOD.NAME)")
-        cmd += " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString;
+            cmd += " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString;
         cmd += ")";
         System.Diagnostics.Debug.WriteLine("Query " + cmd);
 
@@ -339,6 +345,100 @@ public partial class Search : System.Web.UI.Page
             rID = "~/Restaurants.aspx?restaurant=" + rID;
             gr.Cells[0].Controls.Add(hp);
         }
-        conn.Close();    
+        conn.Close();
+    }
+    protected void Filter_Click(object sender, EventArgs e)
+    {
+        filter("", "");
+    }
+
+    private void filter(string sortExp, string sortDir)
+    {
+        string searchString = Request.QueryString["SearchString"].ToUpper();
+        StringBuilder ConnectionString = new StringBuilder();
+        ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                .Append("USER ID=").Append(ProjectSettings.dbUser);
+        string cmd = "SELECT NAME,DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE ? OR UPPER(CITY) LIKE ? OR UPPER(STATE) LIKE ? OR UPPER(DESCRIPTION) LIKE ? AND PRICE <= ? AND RATING >=? AND SMOKING = ? AND ALCOHOL = ? AND  WIFI = ? AND PRIVATEDINING = ? AND CASHONLY = ? AND PARKING = ? UNION SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND SRAJAGOP.FOOD.FOODID IN (SELECT SRAJAGOP.FOOD.FOODID FROM SRAJAGOP.FOOD WHERE (UPPER(SRAJAGOP.FOOD.NAME) LIKE ?)))";
+        System.Diagnostics.Debug.WriteLine("Simpe query: " + cmd);
+        OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+        OleDbCommand simp_search = new OleDbCommand(cmd, conn);
+        OleDbParameter param = new OleDbParameter();
+        string priceValue;
+        string ratingValue;
+        string smokingButton = "SMOKING"; ;
+        string alcoholButton = "ALCOHOL";
+        string wifibutton = "WIFI";
+        string privatediningbutton = "PRIVATEDINING";
+        string cashonlybutton = "CASHONLY";
+        string parkingonlybutton = "PARKING";
+        if (SmokingButton.SelectedIndex != -1)
+            smokingButton = SmokingButton.SelectedItem.Value;
+        if (AlcoholButton.SelectedIndex != -1)
+            alcoholButton = AlcoholButton.SelectedItem.Value;
+        if (Wifibutton.SelectedIndex != -1)
+            wifibutton = Wifibutton.SelectedItem.Value;
+        if (PrivateDining.SelectedIndex != -1)
+            privatediningbutton = PrivateDining.SelectedItem.Value;
+        if (CashOnlyButton.SelectedIndex != -1)
+            cashonlybutton = CashOnlyButton.SelectedItem.Value;
+        if (ParkingButton.SelectedIndex != -1)
+            parkingonlybutton = ParkingButton.SelectedItem.Value;
+        priceValue = PriceDropDown.SelectedValue;
+        if (priceValue == "0")
+            priceValue = "5";
+        ratingValue = RatingDropDown.SelectedValue;
+        if (ratingValue == "0")
+            ratingValue = "1";
+        simp_search.Parameters.Add("@p1", OleDbType.VarChar).Value = "%" + searchString + "%";
+        simp_search.Parameters.Add("@p2", OleDbType.VarChar).Value = "%" + searchString + "%";
+        simp_search.Parameters.Add("@p3", OleDbType.VarChar).Value = "%" + searchString + "%";
+        simp_search.Parameters.Add("@p4", OleDbType.VarChar).Value = "%" + searchString + "%";
+        simp_search.Parameters.Add("@p5", OleDbType.Integer).Value = priceValue;
+        simp_search.Parameters.Add("@p6", OleDbType.Integer).Value = ratingValue;
+        simp_search.Parameters.Add("@p7", OleDbType.VarChar).Value = smokingButton;
+        simp_search.Parameters.Add("@p8", OleDbType.VarChar).Value = alcoholButton;
+        simp_search.Parameters.Add("@p9", OleDbType.VarChar).Value = wifibutton;
+        simp_search.Parameters.Add("@p10", OleDbType.VarChar).Value = privatediningbutton;
+        simp_search.Parameters.Add("@p11", OleDbType.VarChar).Value = cashonlybutton;
+        simp_search.Parameters.Add("@p12", OleDbType.VarChar).Value = parkingonlybutton;
+        simp_search.Parameters.Add("@p13", OleDbType.VarChar).Value = "%" + searchString + "%";
+        conn.Open();
+        OleDbDataAdapter oAdapter = new OleDbDataAdapter(simp_search);
+        //tbl.Clear();
+        oAdapter.Fill(tbl);
+        DataView myDataView = new DataView();
+        myDataView = tbl.Tables[0].DefaultView;
+        if (sortExp != string.Empty)
+        {
+            myDataView.Sort = string.Format("{0} {1}", sortExp, sortDir);
+        }
+        GridView1.DataSource = myDataView;
+        GridView1.DataBind();
+        GridView1.PagerSettings.Mode = PagerButtons.Numeric;
+
+        foreach (GridViewRow gr in GridView1.Rows)
+        {
+            HyperLink hp = new HyperLink();
+            hp.Text = gr.Cells[0].Text;
+            rName = hp.Text;
+            rID = gr.Cells[9].Text;
+            rID = "~/Restaurants.aspx?restaurant=" + rID;
+            gr.Cells[0].Controls.Add(hp);
+        }
+        conn.Close();
+    }
+    protected void Clear_Click(object sender, EventArgs e)
+    {
+        PriceDropDown.SelectedIndex = 0;
+        RatingDropDown.SelectedIndex = 0;
+        PrivateDining.SelectedIndex = -1;
+        SmokingButton.SelectedIndex = -1;
+        Wifibutton.SelectedIndex = -1;
+        AlcoholButton.SelectedIndex = -1;
+        CashOnlyButton.SelectedIndex = -1;
+        ParkingButton.SelectedIndex = -1;
     }
 }

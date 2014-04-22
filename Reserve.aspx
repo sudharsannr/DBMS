@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Reservation Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Reserve.aspx.cs" Inherits="Account_Default" %>
+﻿<%@ Page Title="Reservation Page" MaintainScrollPositionOnPostback="true" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="Reserve.aspx.cs" Inherits="Account_Default" %>
 
 
 
