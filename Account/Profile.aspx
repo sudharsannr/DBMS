@@ -2,10 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="jumbotron">
-        <h1>Gourmet Guide</h1>
-        <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
-    </div>
+    
     <script src="Scripts/jquery-1.10.2.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {

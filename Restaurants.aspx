@@ -5,11 +5,7 @@
      <%=str%>
     </div>--%>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="jumbotron">
-        <h1>Gourmet Guide</h1>
-        <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
-    </div>
-    <div class ="row">
+     <div class ="row">
     <div id ="detailsdiv" class="col-md-5" style="background-color: #333333; color: #ffffff;">
         <h4>
             <asp:TableCell runat="server" Font-Bold="True" Text=" "><b>Restaurant Name : </b></asp:TableCell><%=rName%></h4>
@@ -92,7 +88,7 @@
                 var marker = new google.maps.Marker({
                     position: latlng,
                     map: map,
-                    title: '<% =rName%>'
+                    title: "<% =rName%>"
                 });
                 var pinColor = "00FF00";
                 var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,

@@ -10,8 +10,7 @@
         $(document).ready(function () {
             sType = $('#searchType').val();
             panelLoad();
-            $("#advSrchButton").click(function ()
-            {
+            $("#advSrchButton").click(function () {
                 displayAdvPanel();
             });
         });
@@ -37,8 +36,7 @@
             }
         }
 
-        function panelLoad()
-        {
+        function panelLoad() {
             console.log("Inside panelLoad " + sType);
             if (sType != "") {
                 if (sType == 'advanced') {
@@ -70,10 +68,6 @@
             }
         }
     </script>
-    <div class="jumbotron">
-        <h1>Gourmet Guide</h1>
-        <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
-    </div>
     <div class="row">
         <h2>Need something different?</h2>
         <p>

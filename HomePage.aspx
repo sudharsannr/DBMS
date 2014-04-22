@@ -2,11 +2,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="jumbotron">
-        <h1>Gourmet Guide</h1>
-        <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
-    </div>
-
     <p class="text-danger">
         <asp:Literal runat="server" ID="ErrorMessage" />
     </p>  
