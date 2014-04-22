@@ -81,9 +81,10 @@
         function gMaps() {
             var Lat = '<% =Lat%>';
             var lng = '<% =lng%>';
+            var markers = JSON.parse('<% =ConvertDatatoString(dt1)%>');
             var latlng = new google.maps.LatLng(Lat, lng);
                 var myOptions = {
-                    zoom: 17,
+                    zoom: 12,
                     center: latlng,
                     mapTypeId: google.maps.MapTypeId.HYBRID
                 }
@@ -91,9 +92,25 @@
                 var marker = new google.maps.Marker({
                     position: latlng,
                     map: map,
-                    title: 'Restaurant'
-                });        
-            
+                    title: '<% =rName%>'
+                });
+                var pinColor = "00FF00";
+                var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+                new google.maps.Size(21, 34),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(10, 34));
+                for(i=0;i<markers.length;i++)
+                {
+                    var data = markers[i];
+                    var name = data.Name;
+                    var mylatLng = new google.maps.LatLng(data.Latitude, data.Longitude);
+                    var myMarker = new google.maps.Marker({
+                        position: mylatLng,
+                        map: map,
+                        title:name,
+                        icon: pinImage                       
+                    })
+                }            
             }
         
     </script>

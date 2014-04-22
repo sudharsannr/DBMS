@@ -33,35 +33,87 @@ public partial class Account_Restaurants : System.Web.UI.Page
     public float longr;
     public float latt;
     public float longt;
+    public DataTable dt1 = new DataTable();
     DataTable t;
+    
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            ViewState["sortOrder"] = "";
-            bindGridView("", "");
-            StringBuilder ConnectionString = new StringBuilder();
-            ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
-                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
-                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
-                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
-                    .Append("USER ID=").Append(ProjectSettings.dbUser);
-            OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
-            conn.Open();
-            string cmd2 = "select name, Distance, website,Latitude, Longitude from (select name, round(distance,3) as Distance, website, srajagop.location.Latitude as latitude, srajagop.location.Longitude as longitude from srajagop.location,(select restaurantid,touristid as ti,2*6373*ASIN(sqrt((sin((0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2))*(sin(0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2)))+(cos(0.017453293*(srajagop.location.latitude))*cos(0.017453293*(srajagop.restaurant.latitude))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))))) as distance from ProjectSettings.schema.RESTAURANT, srajagop.location where restaurantid =" + rid + " order by distance) where touristid = ti and website IS NOT NULL) where rownum<=10";
-            OleDbCommand name3 = new OleDbCommand(cmd2, conn);
-            OleDbDataAdapter oAdapter2 = new OleDbDataAdapter(name3);
-            oAdapter2.Fill(tbl2);
-            DataView myDataView2 = new DataView();
-            myDataView2 = tbl2.Tables[0].DefaultView;
-            GridView2.DataSource = myDataView2;
-            GridView2.DataBind();
-            conn.Close();
-        }
+        
         if (Request.QueryString["restaurant"] != null)
         {
             rid = Request.QueryString["restaurant"];
+        }        
+        if (!IsPostBack)
+        {
+            if (Request.QueryString["restaurant"] != null)
+            {
+                StringBuilder ConnectionString = new StringBuilder();
+                ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                        .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                        .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                        .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                        .Append("USER ID=").Append(ProjectSettings.dbUser);
+                OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+                conn.Open();
+                string cmd2 = "select name, Distance, website,Latitude, Longitude from (select name, round(distance,3) as Distance, website, srajagop.location.Latitude as latitude, srajagop.location.Longitude as longitude from srajagop.location,(select restaurantid,touristid as ti,2*6373*ASIN(sqrt((sin((0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2))*(sin(0.017453293*(srajagop.location.latitude-srajagop.restaurant.latitude)/2)))+(cos(0.017453293*(srajagop.location.latitude))*cos(0.017453293*(srajagop.restaurant.latitude))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))*(sin(0.017453293*(srajagop.location.longitude-srajagop.restaurant.longitude)/2))))) as distance from ProjectSettings.schema.RESTAURANT, srajagop.location where restaurantid =" + rid + " order by distance) where touristid = ti and website IS NOT NULL) where rownum<=10";
+                System.Diagnostics.Debug.Write("Rid is " + rid);
+                System.Diagnostics.Debug.Write("Query is " + cmd2);
+                OleDbCommand name3 = new OleDbCommand(cmd2, conn);
+                OleDbDataAdapter oAdapter2 = new OleDbDataAdapter(name3);
+                oAdapter2.Fill(tbl2);
+                DataView myDataView2 = new DataView();
+                myDataView2 = tbl2.Tables[0].DefaultView;
+                GridView2.DataSource = myDataView2;
+                GridView2.DataBind();
+                OleDbDataReader oReader = name3.ExecuteReader();
+                DataColumn column;
+                if (dt1.Columns.Count == 0)
+                {
+                    column = new DataColumn();
+                    column.ColumnName = "Latitude";
+                    column.DataType = System.Type.GetType("System.String");
+                    dt1.Columns.Add(column);
+                    column = new DataColumn();
+                    column.ColumnName = "Longitude";
+                    column.DataType = System.Type.GetType("System.String");
+                    dt1.Columns.Add(column);
+                    column = new DataColumn();
+                    column.ColumnName = "Name";
+                    column.DataType = System.Type.GetType("System.String");
+                    dt1.Columns.Add(column);
+                }
+                while (oReader.Read())
+                {
+                    DataRow row;
+                    row = dt1.NewRow();
+                    row["Latitude"] = oReader[3].ToString();
+                    row["Longitude"] = oReader[4].ToString();
+                    row["Name"] = oReader[0].ToString();
+                    dt1.Rows.Add(row);
+                }
+                conn.Close();
+            }
+            ViewState["sortOrder"] = "";
+            bindGridView("", "");            
         }
+    }
+
+    public string ConvertDatatoString(DataTable dt)
+    {
+        System.Web.Script.Serialization.JavaScriptSerializer serializer= new System.Web.Script.Serialization.JavaScriptSerializer();
+        List<Dictionary<string, string>> _DictionaryList = new List<Dictionary<string, string>>();
+        Dictionary<string, string> dRow;
+        foreach(DataRow dr in dt.Rows)
+        {
+            dRow = new Dictionary<string, string>();
+            foreach (DataColumn dCol in dt.Columns)
+            {
+                string val = dr[dCol].ToString();
+                dRow.Add(dCol.ColumnName.ToString(), val);
+            }
+            _DictionaryList.Add(dRow);
+        }
+        return serializer.Serialize(_DictionaryList);
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
@@ -230,7 +282,6 @@ public partial class Account_Restaurants : System.Web.UI.Page
     }
     protected void FoodReserve_Click(object sender, EventArgs e)
     {
-        string str = "~/OrderFood?restaurant=" + rid;
-        Response.Redirect("~/OrderFood?restaurant=" + rid);
+        Response.Redirect("~/OrderFood?prev=rest&restaurant=" + rid);
     }  
 }
