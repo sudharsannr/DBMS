@@ -19,20 +19,28 @@ public partial class Account_OrderFood : System.Web.UI.Page
     string eMail;
     OleDbConnection conn = null;
     OleDbDataReader oReader;
+    string orderValidate = "";
     protected void Page_Load(object sender, EventArgs e)
     {
         val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+        if (Request.QueryString["prev"] != null)
+            orderValidate = Request.QueryString["prev"];
         CheckBoxValidator.Visible = false;
-        if (val1)
+        if (val1 || String.Equals(orderValidate, "reserve", StringComparison.OrdinalIgnoreCase))
         {
+            Session["preorder"] = "false";
             EMailID.Enabled = false;
             rfvEmail.Enabled = false;
             EMailID.Visible = false;
             EMailLabel.Visible = false;
             emaildiv.Visible = false;
+            if (String.Equals(orderValidate, "reserve", StringComparison.OrdinalIgnoreCase))
+                Session["preorder"] = "true";
         }
         else
         {
+
+            Session["preorder"] = "false";
             emaildiv.Visible = true;
             EMailID.Visible = true;
             EMailLabel.Visible = true;
@@ -40,6 +48,8 @@ public partial class Account_OrderFood : System.Web.UI.Page
         if (Request.QueryString["restaurant"] != null)
         {
             rid = Request.QueryString["restaurant"].ToUpper();
+            if (!string.Equals(orderValidate, "reserve", StringComparison.OrdinalIgnoreCase))
+                checkRestaurantDate();
             StringBuilder ConnectionString = new StringBuilder();
             ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
                     .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
@@ -120,7 +130,10 @@ public partial class Account_OrderFood : System.Web.UI.Page
         }
         else
         {
-            eMail = EMailID.Text;
+            if (Request.QueryString["prev"].Equals("rest"))
+                eMail = EMailID.Text;
+            else
+                eMail = Session["eMail"].ToString();
         }
         
         string bookDetails = "";        
@@ -181,6 +194,39 @@ public partial class Account_OrderFood : System.Web.UI.Page
         insert_foodOrder.Parameters.Add("?", OleDbType.VarChar).Value = TotalPrice.Value;
         insert_foodOrder.ExecuteNonQuery();
         tran.Commit();
+        conn.Close();
+    }
+
+    private void checkRestaurantDate()
+    {
+        string cmd = "select nonworkingdays from srajagop.restaurant where restaurantid = " + rid;
+        StringBuilder ConnectionString = new StringBuilder();
+        ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                    .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                    .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                    .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                    .Append("USER ID=").Append(ProjectSettings.dbUser);
+        conn = new OleDbConnection(ConnectionString.ToString());
+        conn.Open();
+        OleDbCommand select_restaurants = new OleDbCommand(cmd, conn);
+        oReader = select_restaurants.ExecuteReader();
+        oReader.Read();
+        int nwdays = System.Convert.ToInt32(oReader[0].ToString());
+        int dayofweek = (int)System.DateTime.Now.DayOfWeek;
+        System.Diagnostics.Debug.WriteLine(nwdays + " vs " + dayofweek);
+        if (dayofweek == nwdays % 7)
+        {
+            //show not available message
+            NonWorkingMsg.Visible = true;
+            OrderBtn.Enabled = false;
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "disableCheckBox", "disableCheckBoxes()", true);
+        }
+        else
+        {
+            NonWorkingMsg.Visible = false;
+            OrderBtn.Enabled = true;
+        }
+        oReader.Close();
         conn.Close();
     }
 }

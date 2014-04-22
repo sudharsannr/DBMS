@@ -17,7 +17,7 @@
 
 
 </head>
-<body>
+<body style="background-image: url(../Images/back.png); background-size: cover">
     <form runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>

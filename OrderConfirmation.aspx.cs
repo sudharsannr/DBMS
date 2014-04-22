@@ -18,6 +18,17 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
     StringBuilder booking = new StringBuilder();
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session["preorder"].ToString().Equals("true"))
+        {
+            addressdiv.Visible = false;
+            rfvaddress1.Enabled = false;
+
+        }
+        else
+        {
+            addressdiv.Visible = true;
+            rfvaddress1.Enabled = true;
+        }
         if (Session["eMail"] != null)
         {
             str_eMail = Session["eMail"].ToString();
@@ -35,19 +46,25 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
         {
             str_bookDetails = Session["bookDetails"].ToString();
             string[] str_booking = str_bookDetails.Split('~');
+            str_bookDetails = "";
             booking.Append("<b>"+str_booking[0].ToString()+"</b>");
+            str_bookDetails += str_booking[0].ToString()+"\n";
             booking.Append("<table cellspacing = 10 cellpadding = 5>")
                     .Append("<tr><th>"+str_booking[1]+"</th>")
                     .Append("<th>"+str_booking[2]+"</th></tr>");
+            str_bookDetails += str_booking[1].ToString() + " ..... " + str_booking[2].ToString() + "\n";
             for (int i = 3; i < str_booking.Length-3; i+=2 )
             {
                 booking.Append("<tr><td>"+str_booking[i] + "</td>");
                 booking.Append("<td>" + str_booking[i + 1] + "</td> </tr>");
+                str_bookDetails += str_booking[i].ToString() + " ..... $" + str_booking[i + 1].ToString() + "\n"; 
             }
             booking.Append("<tr><th>" + str_booking[str_booking.Length-3] + "</th>");
             booking.Append("<th>" + str_booking[str_booking.Length - 2] + "</th> </tr>");
+            str_bookDetails += str_booking[str_booking.Length - 3].ToString() + " ..... " + str_booking[str_booking.Length - 2].ToString() + "\n"; 
             booking.Append("</table>");
             bookDetails.InnerHtml = booking.ToString();
+
             System.Diagnostics.Debug.WriteLine("BookDetails: " + str_bookDetails);
             //Session.Remove("bookDetails");
         }
@@ -97,7 +114,14 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
         string subject = "";
         var content = "";
         str_bookDetails = Session["bookDetails"].ToString();
-        str_bookDetails = str_bookDetails.Replace("~", System.Environment.NewLine);
+        string[] str_booking = str_bookDetails.Split('~');
+        str_bookDetails = str_booking[0].ToString() + "\n";
+        str_bookDetails += str_booking[1].ToString() + str_booking[2].ToString() + "\n";
+        for (int i = 3; i < str_booking.Length - 3; i += 2)
+        {
+            str_bookDetails += str_booking[i].ToString() + "$" + str_booking[i + 1].ToString() + "\n";
+        }
+        str_bookDetails += str_booking[str_booking.Length - 3].ToString() + str_booking[str_booking.Length - 2].ToString() + "\n";
         subject = "GourmetGuide food order confirmation";
         content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + str_bookDetails + "\n\n" + "GourmetGuide team.";
         System.Diagnostics.Debug.WriteLine("Final email: " + Session["eMail"]);

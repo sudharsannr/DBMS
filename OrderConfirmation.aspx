@@ -14,20 +14,18 @@
         <div class="form-group">
              <div style ="col-md-5" id="bookDetails" runat="server">
         </div>
-            <br /><br />
-            <asp:Label runat="server" AssociatedControlID="Address1" ID="Address1Label" CssClass="col-md-2 control-label">Address1</asp:Label>
-            <div class="col-md-10">
+             <br />
+            <div id="addressdiv" runat="server" class="col-md-10">
+            <asp:Label runat="server" AssociatedControlID="Address1" ID="Address1Label">Address1</asp:Label>
+                <br />
                 <asp:TextBox runat="server" ID="Address1" CssClass="form-control"/>
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="Address1"
+                <asp:RequiredFieldValidator ID ="rfvaddress1" runat="server" ControlToValidate="Address1"
                     CssClass="text-danger" ErrorMessage="Address field is required." />
-            </div>
-        </div>
-        <div class="form-group">
-            <asp:Label runat="server" AssociatedControlID="Address2" ID="Label2" CssClass="col-md-2 control-label">Address2</asp:Label>
-            <div class="col-md-10">
+                <br />
+            <asp:Label runat="server" AssociatedControlID="Address2" ID="Label2" >Address2</asp:Label>
                 <asp:TextBox runat="server" ID="Address2" CssClass="form-control"/>
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="Address2"
-                    CssClass="text-danger" ErrorMessage="Address field is required." />
+                <%--<asp:RequiredFieldValidator ID ="rfvaddress2"  runat="server" ControlToValidate="Address2"
+                    CssClass="text-danger" ErrorMessage="Address field is required."/>--%>
             </div>
         </div>
        

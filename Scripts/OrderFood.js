@@ -73,3 +73,8 @@ function gatherData()
     $("#MainContent_OrderData").val(data);
     $("#MainContent_TotalPrice").val($("#totalPrice").text());
 }
+
+function disableCheckBoxes() {
+    console.log('Disabling checkboxes');
+    $(':checkbox').attr('disabled', true);
+}
