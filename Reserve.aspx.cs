@@ -229,14 +229,12 @@ public partial class Account_Default : System.Web.UI.Page
             //ddValidator3.Enabled = false;
             //ddValidator4.Enabled = false;
 
-            if (CheckBox1.Checked)
-                val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+            val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
             if (val1)
             {
                 EMailID.Enabled = false;
                 rfvEmail.Enabled = false;
-                EMailID.Visible = false;
-                EMailLabel.Visible = false;
+                EMailDiv.Visible = false;
             }
             else
             {
