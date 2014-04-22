@@ -18,6 +18,11 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
     StringBuilder booking = new StringBuilder();
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            str_eMail = retrieveEmailID();
+            Session["eMail"] = str_eMail;
+        }
         if (Session["eMail"] != null)
         {
             str_eMail = Session["eMail"].ToString();
@@ -63,6 +68,26 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
             fetchAddress();
         }
         
+    }
+
+    private string retrieveEmailID()
+    {
+        string eMail;
+        StringBuilder ConnectionString = new StringBuilder();
+        ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
+                .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
+                .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
+                .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
+                .Append("USER ID=").Append(ProjectSettings.dbUser);
+        string cmd1 = "SELECT emailID FROM SRAJAGOP.REGISTEREDUSER WHERE username = '" + Context.User.Identity.Name + "'";
+        OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
+        conn.Open();
+        OleDbCommand select_search = new OleDbCommand(cmd1, conn);
+        OleDbDataReader oReader = select_search.ExecuteReader();
+        //TODO: If no rows display message.
+        oReader.Read();
+        eMail = oReader[0].ToString();
+        return eMail;
     }
 
     private void fetchAddress()
