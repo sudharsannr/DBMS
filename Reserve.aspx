@@ -94,7 +94,7 @@
         <br />
         <br />
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10" id="EMailDiv" runat="server">
     <asp:Label runat="server" AssociatedControlID="EMailID" ID="EMailLabel"  >EMail Address*</asp:Label>
         <asp:TextBox runat="server" ID="EMailID" CssClass="form-control" />
         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="EMailID"
