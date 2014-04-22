@@ -387,7 +387,9 @@ public partial class Account_Default : System.Web.UI.Page
 
         //int[] AvailabilityCount={Int32.Parse(DropDownList1.SelectedValue),Int32.Parse(DropDownList2.SelectedValue),Int32.Parse(DropDownList3.SelectedValue),Int32.Parse(DropDownList4.SelectedValue)};
         int avlCnt = 0;
-        bookDetails += "Restaurant: " + name + "~";
+        int totalpersons = 0;
+        bookDetails += "Restaurant: " + name + "\n";
+        bookDetails += " Date and Time : " + datepicker.Text + " at " + DropDownList5.SelectedValue + "\n";
         for (int i = 0; i < 4; i++)
         {
             avlCnt = 0;
@@ -422,12 +424,12 @@ public partial class Account_Default : System.Web.UI.Page
                 update_AvlCnt.ExecuteNonQuery();
                 tran.Commit();
 
-                bookDetails += "Table for " + groupID + " totaling for " + (groupID * avlCnt) + " persons"
-                             + " on " + datepicker.Text + " at " + DropDownList5.SelectedValue + ".~";
+                bookDetails += "Table for " + groupID + " : " + avlCnt + " nos.\n";
+                totalpersons += groupID * avlCnt;
                 conn.Close();
             }
-        
         }
+            bookDetails += "Party size : " + totalpersons + " persons.\n\n";
         if (CheckParking.Checked)
         {
             string insertParkingcmd = "insert into srajagop.parkingreserve values(?,?)";
@@ -455,8 +457,16 @@ public partial class Account_Default : System.Web.UI.Page
                 bookDetails += " slot";
             else
                 bookDetails += " slots";
-            bookDetails += ".~~";
+            bookDetails += ".\n\n";
         }
+
+        string subject = "";
+        var content = "";
+        subject = "GourmetGuide reservation confirmation";
+        content = "Hi. \n\nHere are the details for your reservation done a few minutes ago:\n\n" + bookDetails + "\n\n"
+                  + "GourmetGuide team.";
+        SendMail sm = new SendMail(eMail, null, subject, content);
+        sm.send();
 
         /*string subject;
         var content = "";
@@ -467,12 +477,13 @@ public partial class Account_Default : System.Web.UI.Page
         sm.send();
          */
         //Response.Redirect("/Account/Profile.aspx", true);
-        string query = "orderdetails=" + bookDetails + "&email=" + eMail + "&registered=" + val1 + "&type=table";
-        Session["bookDetails"] = bookDetails;
-        Session["eMail"] = eMail;
-        Session["registered"] = val1.ToString();
-        Session["type"] = "table";
-        Response.Redirect("~/OrderConfirmation.aspx", true);
+        
+        if (Preorder.Checked)
+            Response.Redirect("~/OrderFood.aspx/?prev=reserve&restaurant=" + Request.QueryString["restaurant"]);
+        else
+        {
+            Response.Redirect("~/HomePage.aspx", true);
+        }
     }
 
     protected void CheckParking_CheckedChanged(object sender, EventArgs e)

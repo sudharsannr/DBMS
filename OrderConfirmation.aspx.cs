@@ -98,18 +98,8 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
         var content = "";
         str_bookDetails = Session["bookDetails"].ToString();
         str_bookDetails = str_bookDetails.Replace("~", System.Environment.NewLine);
-        if (String.Equals(str_orderType, "food", StringComparison.OrdinalIgnoreCase))
-        {
-            subject = "GourmetGuide food order confirmation";
-            content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + str_bookDetails + "\n\n"
-                      + "GourmetGuide team.";
-        }
-        else
-        {
-            subject = "GourmetGuide reservation confirmation";
-            content = "Hi. \n\nHere are the details for your reservation done a few minutes ago:\n\n" + str_bookDetails + "\n\n"
-                      + "GourmetGuide team.";
-        }
+        subject = "GourmetGuide food order confirmation";
+        content = "Hi. \n\nYou've ordered food from our site a few minutes ago. The following are the details:\n\n" + str_bookDetails + "\n\n" + "GourmetGuide team.";
         System.Diagnostics.Debug.WriteLine("Final email: " + Session["eMail"]);
         SendMail sm = new SendMail(Session["eMail"].ToString(), null, subject, content);
         Session.Remove("bookDetails");
