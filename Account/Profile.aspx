@@ -76,7 +76,7 @@
             <div id="recentSrchResult">
                 <asp:Repeater ID="RecentSearchRepeater" runat="server">
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" AutoPostBack="false" ID="SearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SearchTerm_Click" CausesValidation="false"/>
+                        <asp:LinkButton  ForeColor="#000066" runat="server" AutoPostBack="false" ID="SearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SearchTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
@@ -92,7 +92,7 @@
             <div id="freqSrchResult">
                 <asp:Repeater ID="FrequentSearchRepeater" runat="server">
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" AutoPostBack="false" ID="FrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="FrequentSearchTerm_Click" CausesValidation="false"/>
+                        <asp:LinkButton  ForeColor="#000066" runat="server" AutoPostBack="false" ID="FrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="FrequentSearchTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
@@ -108,7 +108,7 @@
             <div id="SameLocfreqSrchResult">
                 <asp:Repeater ID="SameLocFrequentSearchRepeater" runat="server"> 
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" AutoPostBack="false" ID="SameLocFrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SameLocFrequentSearchTerm_Click" CausesValidation="false"/>
+                        <asp:LinkButton  ForeColor="#000066" runat="server" AutoPostBack="false" ID="SameLocFrequentSearchTerm" Text='<%# Eval("searchterm") %>' OnClick="SameLocFrequentSearchTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
@@ -124,7 +124,7 @@
             <div id="FoodLikedResult">
                 <asp:Repeater ID="FoodLikedRepeater" runat="server">
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" AutoPostBack="false" ID="FoodLikedTerm" Text='<%# Eval("foodname") %>' OnClick="FoodLikedTerm_Click" CausesValidation="false"/>
+                        <asp:LinkButton  ForeColor="#000066" runat="server" AutoPostBack="false" ID="FoodLikedTerm" Text='<%# Eval("foodname") %>' OnClick="FoodLikedTerm_Click" CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
@@ -141,7 +141,7 @@
                 <asp:Repeater ID="RestaurantLikedRepeater" runat="server" OnItemDataBound="RestaurantLikedRepeater_ItemDataBound">
                     <ItemTemplate>
                         <asp:Label ID="Label1" runat="server" Text='<%# Eval("restaurantid") %>' Visible="false"></asp:Label>
-                        <asp:HyperLink runat="server" AutoPostBack="false" ID="RestaurantLikedTerm"  Text='<%# Eval("name") %>' CausesValidation="false"/>
+                        <asp:HyperLink ForeColor="#000066" runat="server" AutoPostBack="false" ID="RestaurantLikedTerm"  Text='<%# Eval("name") %>' CausesValidation="false"/>
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
