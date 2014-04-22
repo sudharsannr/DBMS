@@ -1,9 +1,6 @@
 ﻿<%@ Page Title="Order food" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeFile="OrderFood.aspx.cs" Inherits="Account_OrderFood" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="jumbotron">
-        <h1>Gourmet Guide</h1>
-        <p class="lead">Your one stop guide from searching a restaurant to ordering food is here.</p>
-    </div>
+    
     <div class="row">
         <div class="col-md-5" id="NoResult" runat="server" visible="false">
             <h4 class="text-danger">                
