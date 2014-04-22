@@ -54,10 +54,26 @@ public partial class Account_Default : System.Web.UI.Page
             DropDownList5.Enabled = true;
             DropDownList5.Items.Add(new ListItem("-select-", "0", true));
             string val;
-            for (int i = otime; i < ctime; i += 100)
+
+            if (ctime > otime)
+                for (int i = otime; i < ctime; i += 100)
+                {
+                    val = i.ToString("D4");
+                    DropDownList5.Items.Add(new ListItem(val.Insert(2, ":"), val, true));
+                }
+            else
             {
-                val = i.ToString("D4");
-                DropDownList5.Items.Add(new ListItem(val.Insert(2, ":"), val, true));
+                for (int i = otime; i < 2400; i += 100)
+                {
+                    val = i.ToString("D4");
+                    DropDownList5.Items.Add(new ListItem(val.Insert(2, ":"), val, true));
+                }
+                otime = otime - (otime / 100) * 100;
+                for (int i = otime; i < ctime; i += 100)
+                {
+                    val = i.ToString("D4");
+                    DropDownList5.Items.Add(new ListItem(val.Insert(2, ":"), val, true));
+                }
             }
         }
 
