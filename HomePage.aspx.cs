@@ -11,6 +11,7 @@ public partial class _Default : Page
     protected void Page_Load(object sender, EventArgs e)
     {
         bool val1 = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+        Session["searchType"] = "simple";
         if(val1==true)
             Response.Redirect("/Account/Profile.aspx");
      }
