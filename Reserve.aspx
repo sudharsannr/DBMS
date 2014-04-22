@@ -89,7 +89,6 @@
             CssClass="text-danger" ErrorMessage="Please select the time." InitialValue="0"/>
         <br />
         <br />
-        <br />
     </div>
     <asp:Label runat="server" AssociatedControlID="EMailID" ID="EMailLabel" CssClass="col-md-2 control-label">EMail Address*</asp:Label>
     <div class="col-md-10">
@@ -119,12 +118,18 @@
         </p>
     </div>
     <div class="col-md-10" id="ParkingFull" runat="server" visible="false" >
-        <br />
         <p class="text-danger">
             Sorry! None of the parking slots are currently available for reservation.
         </p>
     </div>
+    <div class="col-md-10" id="Div1" runat="server">
+        <p>
+            <asp:CheckBox ID="Preorder" runat="server" Text="Check to pre-order food"/>
+        </p>
+        </div>
     <div class="col-md-10">
+        <p>
+            &nbsp;</p>
         <p>
             <asp:Button ID="Button1" runat="server" Text="Reserve" CssClass="btn btn-default" OnClick="Button1_Click" />
         </p>
