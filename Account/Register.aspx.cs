@@ -88,7 +88,7 @@ public partial class Account_Register : Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         System.Diagnostics.Debug.WriteLine(ConnectionString.ToString());
-        string cmd = "select * from srajagop.registereduser where username='"+UserName+"'";
+        string cmd = "select * from " + ProjectSettings.schema + ".registereduser where username='"+UserName+"'";
         OleDbDataReader oReader = null;
         OleDbConnection conn = null;
         try
@@ -99,7 +99,7 @@ public partial class Account_Register : Page
         oReader = select_regUser.ExecuteReader();
         bool hasUserName = oReader.HasRows;
         //conn.Close();
-        cmd = "select * from srajagop.registereduser where EMailID='" + eMail + "'";
+        cmd = "select * from " + ProjectSettings.schema + ".registereduser where EMailID='" + eMail + "'";
         OleDbCommand select_EMail = new OleDbCommand(cmd, conn);
         //conn.Open();
         oReader = select_EMail.ExecuteReader();
@@ -122,7 +122,7 @@ public partial class Account_Register : Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "insert into srajagop.registereduser values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        string cmd = "insert into " + ProjectSettings.schema + ".registereduser values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         OleDbTransaction tran = null;
         OleDbConnection conn = null;
         try

@@ -79,7 +79,7 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "select * from srajagop.registereduser where username=?";
+        string cmd = "select * from " + ProjectSettings.schema + ".registereduser where username=?";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         OleDbParameter param = new OleDbParameter();
         OleDbCommand select_regUser = new OleDbCommand(cmd, conn);
@@ -116,7 +116,7 @@ public partial class Account_RegisterExternalLogin : System.Web.UI.Page
                         .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                         .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                         .Append("USER ID=").Append(ProjectSettings.dbUser);
-                string cmd = "insert into srajagop.registereduser(username) values(?)";
+                string cmd = "insert into " + ProjectSettings.schema + ".registereduser(username) values(?)";
                 OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
                 OleDbTransaction tran = null;
                 conn.Open();

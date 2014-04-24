@@ -91,7 +91,7 @@ public partial class Account_OrderConfirmation : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd1 = "SELECT ADDRESSLINE1, ADDRESSLINE2 FROM ProjectSettings.schema.REGISTEREDUSER WHERE EMAILID = '" + str_eMail + "'";
+        string cmd1 = "SELECT ADDRESSLINE1, ADDRESSLINE2 FROM " + ProjectSettings.schema + ".REGISTEREDUSER WHERE EMAILID = '" + str_eMail + "'";
         System.Diagnostics.Debug.WriteLine(cmd1);
         string address1 = "", address2 = "";
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
