@@ -30,7 +30,7 @@ public partial class Account_ConfirmCodeaspx : System.Web.UI.Page
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
-        string cmd = "select RegistrationCode from srajagop.RegisteredUser where UserName = '" + Text +"'";
+        string cmd = "select RegistrationCode from " + ProjectSettings.schema + ".RegisteredUser where UserName = '" + Text +"'";
         OleDbCommand select_regCode = new OleDbCommand(cmd, conn);
         OleDbDataReader oReader = select_regCode.ExecuteReader();
         int EnteredCode = Int32.Parse(ConfirmCode.Text);
@@ -66,7 +66,7 @@ public partial class Account_ConfirmCodeaspx : System.Web.UI.Page
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
-        string cmd = "update srajagop.RegisteredUser set RegistrationCode=? where UserName = '" + Text + "'";
+        string cmd = "update " + ProjectSettings.schema + ".RegisteredUser set RegistrationCode=? where UserName = '" + Text + "'";
         OleDbParameter param = new OleDbParameter();
         OleDbCommand update_regCode = new OleDbCommand(cmd, conn);
         update_regCode.Parameters.Add("?", OleDbType.Integer).Value = month;
@@ -84,7 +84,7 @@ public partial class Account_ConfirmCodeaspx : System.Web.UI.Page
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
-        string cmd = "select passwd from srajagop.RegisteredUser where UserName = '" + Text + "'";
+        string cmd = "select passwd from " + ProjectSettings.schema + ".RegisteredUser where UserName = '" + Text + "'";
         OleDbCommand select_passwd = new OleDbCommand(cmd, conn);
         OleDbDataReader oReader = select_passwd.ExecuteReader();
         string str="";
@@ -106,7 +106,7 @@ public partial class Account_ConfirmCodeaspx : System.Web.UI.Page
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         conn.Open();
-        string cmd = "select EMailID from srajagop.RegisteredUser where UserName = '" + Text + "'";
+        string cmd = "select EMailID from " + ProjectSettings.schema + ".RegisteredUser where UserName = '" + Text + "'";
         OleDbCommand select_EMail = new OleDbCommand(cmd, conn);
         OleDbDataReader oReader = select_EMail.ExecuteReader();
         string EMail = "";

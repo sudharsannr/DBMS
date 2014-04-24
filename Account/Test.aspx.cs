@@ -24,7 +24,7 @@ public partial class Account_Test : System.Web.UI.Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         //SqlConnection conn = new SqlConnection(ConnectionString);
-        string cmd = "insert into srajagop.test values('Value1','Value2')";
+        string cmd = "insert into " + ProjectSettings.schema + ".test values('Value1','Value2')";
         //SqlCommand selectMovieID = new SqlCommand(cmd, conn);
         OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
         OleDbTransaction tran = null;

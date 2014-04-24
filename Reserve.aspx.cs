@@ -258,12 +258,12 @@ public partial class Account_Default : System.Web.UI.Page
                 EMailLabel.Visible = true;
             }
             string restaurant_id = Request.QueryString["restaurant"];
-            string cmd = "select name,description,opentime,closetime,city,state,address1,address2,zip,nonworkingdays from srajagop.restaurant where restaurantid = " + restaurant_id;
-            string cmd1 = "select availabilitycount from srajagop.tables where groupid = 2 and restaurantid = " + restaurant_id;
-            string cmd2 = "select availabilitycount from srajagop.tables where groupid = 4 and restaurantid = " + restaurant_id;
-            string cmd3 = "select availabilitycount from srajagop.tables where groupid = 6 and restaurantid = " + restaurant_id;
-            string cmd4 = "select availabilitycount from srajagop.tables where groupid = 8 and restaurantid = " + restaurant_id;
-            string cmd5 = "select availability from srajagop.parking where restaurantid = " + restaurant_id;
+            string cmd = "select name,description,opentime,closetime,city,state,address1,address2,zip,nonworkingdays from " + ProjectSettings.schema + ".restaurant where restaurantid = " + restaurant_id;
+            string cmd1 = "select availabilitycount from " + ProjectSettings.schema + ".tables where groupid = 2 and restaurantid = " + restaurant_id;
+            string cmd2 = "select availabilitycount from " + ProjectSettings.schema + ".tables where groupid = 4 and restaurantid = " + restaurant_id;
+            string cmd3 = "select availabilitycount from " + ProjectSettings.schema + ".tables where groupid = 6 and restaurantid = " + restaurant_id;
+            string cmd4 = "select availabilitycount from " + ProjectSettings.schema + ".tables where groupid = 8 and restaurantid = " + restaurant_id;
+            string cmd5 = "select availability from " + ProjectSettings.schema + ".parking where restaurantid = " + restaurant_id;
             //System.Diagnostics.Debug.WriteLine(cmd5);
 
             ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
@@ -378,7 +378,7 @@ public partial class Account_Default : System.Web.UI.Page
         string eMail;
         if (val1)
         {
-            string cmd = "select EMAILID from srajagop.RegisteredUser where userName='" + System.Web.HttpContext.Current.User.Identity.Name + "'";
+            string cmd = "select EMAILID from " + ProjectSettings.schema + ".RegisteredUser where userName='" + System.Web.HttpContext.Current.User.Identity.Name + "'";
             //System.Diagnostics.Debug.WriteLine("UserName is " + System.Web.HttpContext.Current.User.Identity.Name);
             OleDbCommand select_EMail = new OleDbCommand(cmd, conn);
             conn.Open();
@@ -415,7 +415,7 @@ public partial class Account_Default : System.Web.UI.Page
             }
             if (avlCnt != 0)
             {
-                string insertcmd = "insert into srajagop.tablereserve values(?,?,?,?,?)";
+                string insertcmd = "insert into " + ProjectSettings.schema + ".tablereserve values(?,?,?,?,?)";
                 OleDbTransaction tran = null;
                 conn.Open();
                 tran = conn.BeginTransaction();
@@ -427,7 +427,7 @@ public partial class Account_Default : System.Web.UI.Page
                 insert_Tblreserve.Parameters.Add("?", OleDbType.VarChar).Value = DropDownList5.SelectedValue;
                 insert_Tblreserve.ExecuteNonQuery();
                 tran.Commit();
-                string updateAvlCnt = "update srajagop.tables set availabilitycount=? where groupID=? and restaurantID=?";
+                string updateAvlCnt = "update " + ProjectSettings.schema + ".tables set availabilitycount=? where groupID=? and restaurantID=?";
                 tran = null;
                 tran = conn.BeginTransaction();
                 OleDbCommand update_AvlCnt = new OleDbCommand(updateAvlCnt, conn, tran);
@@ -446,7 +446,7 @@ public partial class Account_Default : System.Web.UI.Page
             bookDetails += "Party size : " + totalpersons + " persons.\n\n";
         if (CheckParking.Checked)
         {
-            string insertParkingcmd = "insert into srajagop.parkingreserve values(?,?)";
+            string insertParkingcmd = "insert into " + ProjectSettings.schema + ".parkingreserve values(?,?)";
             OleDbTransaction tran = null;
             conn.Open();
             tran = conn.BeginTransaction();
@@ -455,7 +455,7 @@ public partial class Account_Default : System.Web.UI.Page
             insert_parkingreserve.Parameters.Add("?", OleDbType.VarChar).Value = eMail;
             insert_parkingreserve.ExecuteNonQuery();
             tran.Commit();
-            string updatePrkCnt = "update srajagop.parking set availability=? where restaurantID=?";
+            string updatePrkCnt = "update " + ProjectSettings.schema + ".parking set availability=? where restaurantID=?";
             tran = null;
             tran = conn.BeginTransaction();
             OleDbCommand update_PrkCnt = new OleDbCommand(updatePrkCnt, conn, tran);

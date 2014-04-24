@@ -147,7 +147,7 @@ public partial class Search : System.Web.UI.Page
                 .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
-        string cmd = "insert into srajagop.userSearch values(?,?,CURRENT_TIMESTAMP)";
+        string cmd = "insert into " + ProjectSettings.schema + ".userSearch values(?,?,CURRENT_TIMESTAMP)";
         OleDbTransaction tran = null;
         OleDbConnection conn = null;
         try
@@ -256,7 +256,7 @@ public partial class Search : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE ? OR UPPER(CITY) LIKE ? OR UPPER(STATE) LIKE ? OR UPPER(DESCRIPTION) LIKE ? UNION SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND SRAJAGOP.FOOD.FOODID IN (SELECT SRAJAGOP.FOOD.FOODID FROM SRAJAGOP.FOOD WHERE (UPPER(SRAJAGOP.FOOD.NAME) LIKE ?)))";
+            string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM " + ProjectSettings.schema + ".RESTAURANT WHERE UPPER(NAME) LIKE ? OR UPPER(CITY) LIKE ? OR UPPER(STATE) LIKE ? OR UPPER(DESCRIPTION) LIKE ? UNION SELECT DISTINCT " + ProjectSettings.schema + ".RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, " + ProjectSettings.schema + ".RESTAURANT.RESTAURANTID FROM " + ProjectSettings.schema + ".RESTAURANT INNER JOIN " + ProjectSettings.schema + ".FDPRICECATALOG ON " + ProjectSettings.schema + ".RESTAURANT.RESTAURANTID = " + ProjectSettings.schema + ".FDPRICECATALOG.RESTAURANTID INNER JOIN " + ProjectSettings.schema + ".FOOD ON " + ProjectSettings.schema + ".FOOD.FOODID = " + ProjectSettings.schema + ".FDPRICECATALOG.FOODID AND " + ProjectSettings.schema + ".FOOD.FOODID IN (SELECT " + ProjectSettings.schema + ".FOOD.FOODID FROM " + ProjectSettings.schema + ".FOOD WHERE (UPPER(" + ProjectSettings.schema + ".FOOD.NAME) LIKE ?)))";
             System.Diagnostics.Debug.WriteLine("Simpe query: " + cmd);
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             OleDbCommand simp_search = new OleDbCommand(cmd, conn);
@@ -303,9 +303,9 @@ public partial class Search : System.Web.UI.Page
                 .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
         //string searchString = "GA";
-        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM SRAJAGOP.RESTAURANT WHERE UPPER(NAME) LIKE ?  AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP LIKE " + zipsearchString + " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString;
+        string cmd = "SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM (SELECT NAME, DESCRIPTION, OPENTIME, CLOSETIME,ADDRESS1, ADDRESS2, CITY, STATE, ZIP, RESTAURANTID FROM " + ProjectSettings.schema + ".RESTAURANT WHERE UPPER(NAME) LIKE ?  AND UPPER(DESCRIPTION) LIKE " + cuisinesearchString + " AND OPENTIME LIKE " + openTimesearchString + " AND CLOSETIME LIKE " + closeTimesearchString + " AND ZIP LIKE " + zipsearchString + " AND UPPER(CITY) LIKE " + citysearchString + " AND UPPER(STATE) LIKE " + statesearchString;
         if (foodsearchString != "UPPER(FOOD.NAME)")
-        cmd += " INTERSECT SELECT DISTINCT SRAJAGOP.RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, SRAJAGOP.RESTAURANT.RESTAURANTID FROM SRAJAGOP.RESTAURANT INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID INNER JOIN SRAJAGOP.FOOD ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID AND UPPER(SRAJAGOP.FOOD.NAME) LIKE " + foodsearchString;
+        cmd += " INTERSECT SELECT DISTINCT " + ProjectSettings.schema + ".RESTAURANT.NAME, DESCRIPTION, OPENTIME, CLOSETIME, ADDRESS1, ADDRESS2, CITY, STATE, ZIP, " + ProjectSettings.schema + ".RESTAURANT.RESTAURANTID FROM " + ProjectSettings.schema + ".RESTAURANT INNER JOIN " + ProjectSettings.schema + ".FDPRICECATALOG ON " + ProjectSettings.schema + ".RESTAURANT.RESTAURANTID = " + ProjectSettings.schema + ".FDPRICECATALOG.RESTAURANTID INNER JOIN " + ProjectSettings.schema + ".FOOD ON " + ProjectSettings.schema + ".FOOD.FOODID = " + ProjectSettings.schema + ".FDPRICECATALOG.FOODID AND UPPER(" + ProjectSettings.schema + ".FOOD.NAME) LIKE " + foodsearchString;
         cmd += ")";
         System.Diagnostics.Debug.WriteLine("Query " + cmd);
 

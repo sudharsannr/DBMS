@@ -62,7 +62,7 @@ public partial class Account_Login : Page
                 .Append("USER ID=").Append(ProjectSettings.dbUser);
                             
             System.Diagnostics.Debug.WriteLine(ConnectionString);
-            string cmd = "select REGISTRATIONCODE from srajagop.registereduser where username='" + UserName + "'";
+            string cmd = "select REGISTRATIONCODE from " + ProjectSettings.schema + ".registereduser where username='" + UserName + "'";
             System.Diagnostics.Debug.WriteLine(cmd);
             OleDbConnection conn = new OleDbConnection(ConnectionString.ToString());
             OleDbCommand select_regCode = new OleDbCommand(cmd, conn);

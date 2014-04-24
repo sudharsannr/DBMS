@@ -56,7 +56,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
                     .Append(ProjectSettings.dbPort).Append("/").Append(ProjectSettings.dbSid).Append(";")
                     .Append("PASSWORD=").Append(ProjectSettings.dbKey).Append(";")
                     .Append("USER ID=").Append(ProjectSettings.dbUser);
-            string cmd1 = "SELECT DISTINCT SRAJAGOP.FOOD.NAME, SRAJAGOP.FDPRICECATALOG.PRICE FROM SRAJAGOP.FOOD INNER JOIN SRAJAGOP.FDPRICECATALOG ON SRAJAGOP.FOOD.FOODID = SRAJAGOP.FDPRICECATALOG.FOODID INNER JOIN SRAJAGOP.RESTAURANT ON SRAJAGOP.RESTAURANT.RESTAURANTID = SRAJAGOP.FDPRICECATALOG.RESTAURANTID WHERE SRAJAGOP.RESTAURANT.RESTAURANTID =" + rid;
+            string cmd1 = "SELECT DISTINCT " + ProjectSettings.schema + ".FOOD.NAME, " + ProjectSettings.schema + ".FDPRICECATALOG.PRICE FROM " + ProjectSettings.schema + ".FOOD INNER JOIN " + ProjectSettings.schema + ".FDPRICECATALOG ON " + ProjectSettings.schema + ".FOOD.FOODID = " + ProjectSettings.schema + ".FDPRICECATALOG.FOODID INNER JOIN " + ProjectSettings.schema + ".RESTAURANT ON " + ProjectSettings.schema + ".RESTAURANT.RESTAURANTID = " + ProjectSettings.schema + ".FDPRICECATALOG.RESTAURANTID WHERE " + ProjectSettings.schema + ".RESTAURANT.RESTAURANTID =" + rid;
             conn = new OleDbConnection(ConnectionString.ToString());
             conn.Open();
             OleDbCommand select_search = new OleDbCommand(cmd1, conn);
@@ -117,7 +117,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
         }
         if (val1)
         {
-            string cmd = "select EMAILID from srajagop.RegisteredUser where userName='" + System.Web.HttpContext.Current.User.Identity.Name + "'";
+            string cmd = "select EMAILID from " + ProjectSettings.schema + ".RegisteredUser where userName='" + System.Web.HttpContext.Current.User.Identity.Name + "'";
             //System.Diagnostics.Debug.WriteLine("UserName is " + System.Web.HttpContext.Current.User.Identity.Name);
             OleDbCommand select_EMail = new OleDbCommand(cmd, conn);
             conn.Open();
@@ -139,7 +139,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
         string bookDetails = "";        
         string[] orderData = tmpOrderData.Split('~');
         
-        string insertParkingcmd = "insert into srajagop.foodreserve values(?,?,?,?)";
+        string insertParkingcmd = "insert into " + ProjectSettings.schema + ".foodreserve values(?,?,?,?)";
         OleDbTransaction tran = null;
         conn.Open();      
 
@@ -184,7 +184,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
 
     private void insertintoOrderFood()
     {
-        string OrderFoodcmd = "insert into srajagop.FoodOrder values(?,?,?)";
+        string OrderFoodcmd = "insert into " + ProjectSettings.schema + ".FoodOrder values(?,?,?)";
         OleDbTransaction tran = null;
         conn.Open();      
         tran = conn.BeginTransaction();
@@ -199,7 +199,7 @@ public partial class Account_OrderFood : System.Web.UI.Page
 
     private void checkRestaurantDate()
     {
-        string cmd = "select nonworkingdays from srajagop.restaurant where restaurantid = " + rid;
+        string cmd = "select nonworkingdays from " + ProjectSettings.schema + ".restaurant where restaurantid = " + rid;
         StringBuilder ConnectionString = new StringBuilder();
         ConnectionString.Append("Provider=").Append(ProjectSettings.dbProvider).Append(";")
                     .Append(" DATA SOURCE=").Append(ProjectSettings.dbHost).Append(":")
